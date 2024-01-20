@@ -33,7 +33,7 @@ impl Command {
             Self::About => String::from("Help"),
             Self::Projects => String::from("Help"),
             Self::Experience => String::from("Help"),
-            Self::Contact => fetch::CONTACTS.to_string(),
+            Self::Contact => fetch::get_contacts().to_string(),
             Self::Others => String::from("Others"),
             Self::Bash(bash) => Bash::printout(&bash),
         }

@@ -1,5 +1,5 @@
-use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
+use std::sync::OnceLock;
 
 #[derive(Debug, Deserialize, Serialize)]
 struct Config {
@@ -14,8 +14,9 @@ fn read_config() -> Result<Config, Box<dyn std::error::Error>> {
     Ok(config)
 }
 
-lazy_static! {
-    pub static ref CONTACTS: String = {
+pub fn get_contacts() -> &'static String {
+    static CONTACTS: OnceLock<String> = OnceLock::new();
+    CONTACTS.get_or_init(|| {
         match read_config() {
             Ok(config) => format!(
                 r#"Contact info and links -
@@ -28,5 +29,5 @@ lazy_static! {
                 r#"<span style="color:Red;font-weight:500;">Error reading config.json</span>"#,
             ),
         }
-    };
+    })
 }
