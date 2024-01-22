@@ -12,6 +12,7 @@ fn main() {
 #[component]
 fn Base() -> impl IntoView {
     let (prompts, set_prompts) = create_signal(1);
+    let prevs: Vec<String> = Vec::new();
 
     let add_prompt = move |_| {
         set_prompts.update(|prompts| {
@@ -28,7 +29,7 @@ fn Base() -> impl IntoView {
                     key=|&prompt| prompt
                     children = move |_| {
                         view! {
-                            <Prompt on:submit=add_prompt/>
+                            <Prompt prevs=prevs.clone() on:submit=add_prompt/>
                         }
                     }
                 />
@@ -37,7 +38,7 @@ fn Base() -> impl IntoView {
 }
 
 #[component]
-fn Prompt() -> impl IntoView {
+fn Prompt(mut prevs: Vec<String>) -> impl IntoView {
     let (out, set_out) = create_signal(String::from(""));
 
     let input_element: NodeRef<Input> = create_node_ref();
@@ -48,6 +49,7 @@ fn Prompt() -> impl IntoView {
 
         let value = input_element().unwrap().value();
         set_out(termfolio::Command::process(&value));
+        prevs.push(value);
 
         form_element.get().unwrap().set_inert(true);
     };
