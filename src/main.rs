@@ -1,8 +1,9 @@
-use leptos::ev::SubmitEvent;
+use leptos::ev::{keydown, KeyboardEvent, SubmitEvent};
 use leptos::html::{Form, Input};
+use leptos::on_cleanup;
 use leptos::{
-    component, create_effect, create_node_ref, create_signal, view, For, IntoView, NodeRef,
-    SignalGet, SignalUpdate,
+    component, create_effect, create_node_ref, create_signal, view, window_event_listener, For,
+    IntoView, NodeRef, SignalGet, SignalUpdate,
 };
 
 fn main() {
@@ -12,7 +13,6 @@ fn main() {
 #[component]
 fn Base() -> impl IntoView {
     let (prompts, set_prompts) = create_signal(1);
-    let prevs: Vec<String> = Vec::new();
 
     let add_prompt = move |_| {
         set_prompts.update(|prompts| {
@@ -29,7 +29,7 @@ fn Base() -> impl IntoView {
                     key=|&prompt| prompt
                     children = move |_| {
                         view! {
-                            <Prompt prevs=prevs.clone() on:submit=add_prompt/>
+                            <Prompt on:submit=add_prompt/>
                         }
                     }
                 />
@@ -38,8 +38,8 @@ fn Base() -> impl IntoView {
 }
 
 #[component]
-fn Prompt(mut prevs: Vec<String>) -> impl IntoView {
-    let (out, set_out) = create_signal(String::from(""));
+fn Prompt() -> impl IntoView {
+    let (out, set_out) = create_signal(String::new());
 
     let input_element: NodeRef<Input> = create_node_ref();
     let form_element: NodeRef<Form> = create_node_ref();
@@ -48,10 +48,10 @@ fn Prompt(mut prevs: Vec<String>) -> impl IntoView {
         ev.prevent_default();
 
         let value = input_element().unwrap().value();
+        input_element().unwrap().set_value(&value);
         set_out(termfolio::Command::process(&value));
-        prevs.push(value);
 
-        form_element.get().unwrap().set_inert(true);
+        form_element().unwrap().set_inert(true);
     };
 
     create_effect(move |_| {
@@ -61,6 +61,17 @@ fn Prompt(mut prevs: Vec<String>) -> impl IntoView {
             });
         }
     });
+
+    let prev_command = window_event_listener(keydown, move |ev: KeyboardEvent| {
+        let word = "testing";
+
+        if ev.key() == "ArrowUp" {
+            input_element().unwrap().set_value(word);
+        } else if ev.key() == "ArrowDown" {
+            input_element().unwrap().set_value(word);
+        }
+    });
+    on_cleanup(move || prev_command.remove());
 
     view! {
         <form
