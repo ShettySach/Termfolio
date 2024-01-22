@@ -32,7 +32,6 @@ fn Base() -> impl IntoView {
                         }
                     }
                 />
-
         </div>
     }
 }
@@ -68,7 +67,7 @@ fn Prompt() -> impl IntoView {
             <input type="text" maxlength=42 value=out node_ref=input_element/>
         </form>
         <pre>
-            <p inner_html={out}></p>
+            <p class="output" inner_html={out}></p>
         </pre>
     }
 }
