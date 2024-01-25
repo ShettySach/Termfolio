@@ -30,7 +30,7 @@ impl Command {
     async fn printout(&self) -> String {
         match self {
             Self::Help => format!("{}{}", texts::LOGO, texts::HELP),
-            Self::About => fetch::fetch_user_info().await,
+            Self::About => fetch::get_user().await,
             Self::Projects => String::from("Help"),
             Self::Experience => String::from("Help"),
             Self::Contact => fetch::get_contacts().to_string(),

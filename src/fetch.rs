@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use tokio::sync::OnceCell;
+use tokio::try_join;
 use std::sync::OnceLock;
 
 pub const READ_JSON_ERROR: &str =
@@ -88,32 +89,57 @@ r#"Contact info and links -
     })
 }
 
-pub async fn fetch_user_info() -> String {
-    match read_config() {
-        Some(config) => {
-            let info_url = format!("https://api.github.com/users/{}", config.github);
-            
-            match reqwest::get(&info_url).await {
-                Ok(response) => {
-                    if response.status().is_success() {
-                        let user_info: UserInfo = response.json().await.unwrap();
-                        formatted_info(config.github, user_info)
-                    }
-                    else {
-                        String::from(FETCH_GITHUB_ERROR)
-                    }
-                },
-                _ => String::from(FETCH_GITHUB_ERROR)
-            }
+static USER: OnceCell<String> = OnceCell::const_new();
+
+pub async fn get_user() -> String {
+    USER.get_or_init(|| fetch_user()).await;
+    match USER.get() {
+        Some(user) => {
+            let img = include_str!("img.txt");
+            let user = user.to_string();
+            format!(r#"<div class="row">
+<div class="column">{}</div>
+<div class="column">{}</div>
+<div class="column"></div>
+</div>"#, img, user)
         },
-        _ => String::from(READ_JSON_ERROR)
+        _ => String::from(FETCH_GITHUB_ERROR)
     }
 }
 
-fn formatted_info(username: String, info: UserInfo) -> String {
+pub async fn fetch_user() -> String {
+    match read_config() {
+        Some(config) => {
+            let info_url = format!("https://api.github.com/users/{}", config.github);
+            let stats_url = format!("https://api.github-star-counter.workers.dev/user/{}", config.github);
+
+            match try_join!(
+                async { reqwest::get(&info_url).await },
+                async { reqwest::get(&stats_url).await }
+            ) {
+                Ok((info_response, stats_response)) => {
+                    if info_response.status().is_success() && stats_response.status().is_success() {
+                        let user_info: UserInfo = info_response.json().await.unwrap();
+                        let user_stars: UserStats = stats_response.json().await.unwrap();
+                        
+                        format_info( config.github,user_info, user_stars)
+                    } else {
+                        String::from(FETCH_GITHUB_ERROR)
+                    }
+                }
+                Err(_) => String::from(FETCH_GITHUB_ERROR),
+            }
+        }
+        None => String::from(READ_JSON_ERROR),
+    }
+}
+
+fn format_info(username: String, info: UserInfo, stats: UserStats) -> String {
     let name = info.name.unwrap_or_default();
     let bio = info.bio.unwrap_or_default();
     let repos = info.public_repos;
+    let stars = stats.stars;
+    let forks = stats.forks;
     let company = info.company.unwrap_or_default();
     let followers = info.followers;
     let following = info.following;
@@ -124,8 +150,11 @@ fn formatted_info(username: String, info: UserInfo) -> String {
 Name: {}
 Bio: {}
 Repos: {}
+Stars: {}
+Forks: {}
 Company: {}
 Followers: {}
 Following: {}
-Created on: {}", username, name, bio, repos, company, followers, following, created_on)
-} 
+Created on: {}", username, name, bio, repos, stars, forks, company, followers, following, created_on)
+}
+

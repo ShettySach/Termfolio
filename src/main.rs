@@ -1,4 +1,3 @@
-use async_std::sync::{Arc, Mutex};
 use leptos::ev::SubmitEvent;
 use leptos::html::{Form, Input};
 use leptos::{
@@ -43,17 +42,13 @@ fn Prompt() -> impl IntoView {
 
     let input_element: NodeRef<Input> = create_node_ref();
     let form_element: NodeRef<Form> = create_node_ref();
-    let mutex = Arc::new(Mutex::new(()));
 
     let on_submit = move |ev: SubmitEvent| {
-        let mutex = Arc::clone(&mutex);
         ev.prevent_default();
 
         let value = input_element().unwrap().value();
-        let mutex_clone = Arc::clone(&mutex);
 
         spawn_local(async move {
-            let _lock = mutex_clone.lock().await;
             set_out(termfolio::Command::process(&value).await);
             form_element().unwrap().set_inert(true);
         });
