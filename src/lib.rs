@@ -27,10 +27,10 @@ impl Command {
         }
     }
 
-    fn printout(&self) -> String {
+    async fn printout(&self) -> String {
         match self {
             Self::Help => format!("{}{}", texts::LOGO, texts::HELP),
-            Self::About => String::from("Help"),
+            Self::About => fetch::fetch_user_info().await,
             Self::Projects => String::from("Help"),
             Self::Experience => String::from("Help"),
             Self::Contact => fetch::get_contacts().to_string(),
@@ -39,9 +39,9 @@ impl Command {
         }
     }
 
-    pub fn process(inp: &str) -> String {
+    pub async fn process(inp: &str) -> String {
         let command = Self::from(inp);
-        Self::printout(&command)
+        Self::printout(&command).await
     }
 }
 

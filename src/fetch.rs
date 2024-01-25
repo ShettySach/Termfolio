@@ -1,9 +1,13 @@
 use serde::{Deserialize, Serialize};
+use tokio::sync::OnceCell;
 use std::sync::OnceLock;
 
 pub const READ_JSON_ERROR: &str =
     r#"<span style="color:Red;font-weight:500;">Error reading config.json</span>"#;
 
+pub const FETCH_GITHUB_ERROR: &str =
+    r#"<span style="color:Red;font-weight:500;">Error fetching data from Github.</span>"#;
+    
 #[derive(Deserialize, Serialize, Clone)]
 struct Config {
     github: String,
@@ -12,8 +16,8 @@ struct Config {
     twitter: Option<String>
 }
 
-#[allow(dead_code)]
-struct User {
+#[derive(Deserialize, Serialize, Clone)]
+struct UserInfo {
     name: Option<String>,
     bio: Option<String>,
     public_repos: u32,
@@ -21,8 +25,12 @@ struct User {
     followers: u32,
     following: u32,
     created_at: String,
+}
+
+#[derive(Deserialize, Serialize, Clone)]
+struct UserStats {
     stars: u32,
-    forks: u32,
+    forks: u32
 }
 
 fn read_config() -> Option<Config> {
@@ -79,3 +87,45 @@ r#"Contact info and links -
         }
     })
 }
+
+pub async fn fetch_user_info() -> String {
+    match read_config() {
+        Some(config) => {
+            let info_url = format!("https://api.github.com/users/{}", config.github);
+            
+            match reqwest::get(&info_url).await {
+                Ok(response) => {
+                    if response.status().is_success() {
+                        let user_info: UserInfo = response.json().await.unwrap();
+                        formatted_info(config.github, user_info)
+                    }
+                    else {
+                        String::from(FETCH_GITHUB_ERROR)
+                    }
+                },
+                _ => String::from(FETCH_GITHUB_ERROR)
+            }
+        },
+        _ => String::from(READ_JSON_ERROR)
+    }
+}
+
+fn formatted_info(username: String, info: UserInfo) -> String {
+    let name = info.name.unwrap_or_default();
+    let bio = info.bio.unwrap_or_default();
+    let repos = info.public_repos;
+    let company = info.company.unwrap_or_default();
+    let followers = info.followers;
+    let following = info.following;
+    let created_on = &info.created_at[..10];
+
+    format!("{}@github
+----------------------
+Name: {}
+Bio: {}
+Repos: {}
+Company: {}
+Followers: {}
+Following: {}
+Created on: {}", username, name, bio, repos, company, followers, following, created_on)
+} 

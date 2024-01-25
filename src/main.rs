@@ -1,9 +1,9 @@
-use leptos::ev::{keydown, KeyboardEvent, SubmitEvent};
+use async_std::sync::{Arc, Mutex};
+use leptos::ev::SubmitEvent;
 use leptos::html::{Form, Input};
-use leptos::on_cleanup;
 use leptos::{
-    component, create_effect, create_node_ref, create_signal, view, window_event_listener, For,
-    IntoView, NodeRef, SignalGet, SignalUpdate,
+    component, create_effect, create_node_ref, create_signal, spawn_local, view, For, IntoView,
+    NodeRef, SignalGet, SignalUpdate,
 };
 
 fn main() {
@@ -43,14 +43,22 @@ fn Prompt() -> impl IntoView {
 
     let input_element: NodeRef<Input> = create_node_ref();
     let form_element: NodeRef<Form> = create_node_ref();
+    let mutex = Arc::new(Mutex::new(()));
 
     let on_submit = move |ev: SubmitEvent| {
+        let mutex = Arc::clone(&mutex);
+
         ev.prevent_default();
 
         let value = input_element().unwrap().value();
-        set_out(termfolio::Command::process(&value));
 
-        form_element().unwrap().set_inert(true);
+        let mutex_clone = Arc::clone(&mutex);
+
+        spawn_local(async move {
+            let _lock = mutex_clone.lock().await;
+            set_out(termfolio::Command::process(&value).await);
+            form_element().unwrap().set_inert(true);
+        });
     };
 
     create_effect(move |_| {
@@ -60,17 +68,6 @@ fn Prompt() -> impl IntoView {
             });
         }
     });
-
-    let prev_commands = window_event_listener(keydown, move |ev: KeyboardEvent| {
-        let word = "h";
-
-        if ev.key() == "ArrowUp" {
-            input_element().unwrap().set_value(word);
-        } else if ev.key() == "ArrowDown" {
-            input_element().unwrap().set_value(word);
-        }
-    });
-    on_cleanup(move || prev_commands.remove());
 
     view! {
         <form
@@ -83,3 +80,14 @@ fn Prompt() -> impl IntoView {
         </pre>
     }
 }
+
+/*
+let prev_commands = window_event_listener(keydown, move |ev: KeyboardEvent| {
+    let word = "h";
+
+    if ev.key() == "ArrowUp" {
+        input_element().unwrap().set_value(word);
+    }
+});
+on_cleanup(move || prev_commands.remove());
+*/
