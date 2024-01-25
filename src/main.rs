@@ -47,11 +47,9 @@ fn Prompt() -> impl IntoView {
 
     let on_submit = move |ev: SubmitEvent| {
         let mutex = Arc::clone(&mutex);
-
         ev.prevent_default();
 
         let value = input_element().unwrap().value();
-
         let mutex_clone = Arc::clone(&mutex);
 
         spawn_local(async move {
@@ -76,7 +74,7 @@ fn Prompt() -> impl IntoView {
             <input type="text" maxlength=42 value=out node_ref=input_element/>
         </form>
         <pre>
-            <p class="output" inner_html={out}></p>
+            <div class="output" inner_html={out}></div>
         </pre>
     }
 }
