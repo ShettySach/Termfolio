@@ -7,7 +7,7 @@ pub enum Command {
     Projects,
     Experience,
     Contact,
-    Others,
+    Credits,
     Bash(Bash),
 }
 
@@ -21,20 +21,20 @@ impl Command {
             "about" | "a" | "neofetch" => Self::About,
             "projects" | "projs" | "p" => Self::Projects,
             "experience" | "exp" | "xp" => Self::Experience,
-            "contacts" | "c" => Self::Contact,
-            "others" | "o" => Self::Others,
+            "contacts" => Self::Contact,
+            "credits" | "c" | "C" => Self::Credits,
             _ => Command::Bash(Bash::from(inp.0, inp.1)),
         }
     }
 
     fn printout(&self) -> String {
         match self {
-            Self::Help => String::from(texts::HELP),
+            Self::Help => format!("{}{}", texts::LOGO, texts::HELP),
             Self::About => String::from("Help"),
             Self::Projects => String::from("Help"),
             Self::Experience => String::from("Help"),
             Self::Contact => fetch::get_contacts().to_string(),
-            Self::Others => String::from("Others"),
+            Self::Credits => format!("{}{}", texts::LOGO, texts::CREDITS),
             Self::Bash(bash) => Bash::printout(&bash),
         }
     }

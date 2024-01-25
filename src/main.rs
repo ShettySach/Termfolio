@@ -25,8 +25,8 @@ fn Base() -> impl IntoView {
     view! {
         <div>
                 <For
-                    each=prompt_list
-                    key=|&prompt| prompt
+                    each = prompt_list
+                    key = |&prompt| prompt
                     children = move |_| {
                         view! {
                             <Prompt on:submit=add_prompt/>
@@ -48,7 +48,6 @@ fn Prompt() -> impl IntoView {
         ev.prevent_default();
 
         let value = input_element().unwrap().value();
-        input_element().unwrap().set_value(&value);
         set_out(termfolio::Command::process(&value));
 
         form_element().unwrap().set_inert(true);
@@ -62,8 +61,8 @@ fn Prompt() -> impl IntoView {
         }
     });
 
-    let prev_command = window_event_listener(keydown, move |ev: KeyboardEvent| {
-        let word = "testing";
+    let prev_commands = window_event_listener(keydown, move |ev: KeyboardEvent| {
+        let word = "h";
 
         if ev.key() == "ArrowUp" {
             input_element().unwrap().set_value(word);
@@ -71,7 +70,7 @@ fn Prompt() -> impl IntoView {
             input_element().unwrap().set_value(word);
         }
     });
-    on_cleanup(move || prev_command.remove());
+    on_cleanup(move || prev_commands.remove());
 
     view! {
         <form
