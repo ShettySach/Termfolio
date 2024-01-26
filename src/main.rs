@@ -45,13 +45,13 @@ fn Prompt() -> impl IntoView {
 
     let on_submit = move |ev: SubmitEvent| {
         ev.prevent_default();
-
         let value = input_element().unwrap().value();
 
         spawn_local(async move {
             set_out(termfolio::Command::process(&value).await);
-            form_element().unwrap().set_inert(true);
         });
+
+        form_element().unwrap().set_inert(true);
     };
 
     create_effect(move |_| {
