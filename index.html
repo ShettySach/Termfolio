@@ -11,12 +11,26 @@
 
 <body>
   <style>
+    :root {
+      --black: Black;
+      --green: LimeGreen;
+      --red: Red;
+      --blue: DeepSkyBlue;
+      --yellow: Gold;
+      --magenta: Orchid;
+      --cyan: DarkTurquoise;
+
+      --purple: MediumSlateBlue;
+      --orange: OrangeRed;
+      --dblue: DodgerBlue;
+    }
+
     * {
       font-family: "IBM Plex Mono";
       font-size: 18;
-      background: black;
+      background: var(--black);
       color: white;
-      /* text-shadow: 0px 7px 10px currentColor; */
+      /* text-shadow: 0px 5px 10px currentColor; */
     }
 
     body {
@@ -33,14 +47,34 @@
       display: inline-block;
       margin-right: 10px;
       margin-bottom: 0px;
-      caret-color: lime;
+      caret-color: var(--green);
       font-weight: 500;
       caret-shape: block;
     }
 
+    .semibold {
+      font-weight: 500;
+    }
+
+    .rd {
+      color: var(--red);
+    }
+
+    .grn {
+      color: var(--green);
+    }
+
+    .ylw {
+      color: var(--yellow);
+    }
+
+    .blu {
+      color: var(--blue);
+    }
+
     .inline {
       display: inline;
-      color: lime;
+      color: var(--green);
     }
 
     .output {
@@ -49,9 +83,16 @@
       margin-bottom: 22px;
     }
 
-    .column {
+    .cols {
+      flex-direction: row;
+      flex: 0 0 calc(50% - 15px);
+      box-sizing: border-box;
+      margin: 15px;
       float: left;
-      width: 33%;
+    }
+
+    .row {
+      margin-top: -45px;
     }
 
     .row:after {
@@ -60,9 +101,31 @@
       clear: both;
     }
 
+    .blocks {
+      font-size: 30;
+    }
+
     a {
       text-decoration-thickness: 1px;
       font-weight: 500;
+    }
+
+    .input-color {
+      position: relative;
+    }
+
+    .input-color input {
+      padding-left: 20px;
+    }
+
+    .input-color .color-box {
+      width: 10px;
+      height: 10px;
+      display: inline-block;
+      background-color: #ccc;
+      position: absolute;
+      left: 5px;
+      top: 5px;
     }
   </style>
 </body>

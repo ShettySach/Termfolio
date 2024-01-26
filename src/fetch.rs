@@ -5,11 +5,10 @@ use tokio::try_join;
 
 // Error lines
 
-pub const READ_JSON_ERROR: &str =
-    r#"<span style="color:Red;font-weight:500;">Error reading config.json</span>"#;
+pub const READ_JSON_ERROR: &str = r#"<span class="rd semibold">Error reading config.json</span>"#;
 
 pub const FETCH_GITHUB_ERROR: &str =
-    r#"<span style="color:Red;font-weight:500;">Error fetching data from Github.</span>"#;
+    r#"<span class="rd semibold">Error fetching data from Github.</span>"#;
 
 // Once statics
 
@@ -25,6 +24,7 @@ struct Config {
     email: Option<String>,
     linkedin: Option<String>,
     twitter: Option<String>,
+    langs: Vec<String>,
 }
 
 #[derive(Deserialize, Serialize, Clone)]
@@ -47,8 +47,8 @@ struct UserStats {
 
 // Functions
 
-pub async fn get_user() -> String {
-    ABOUT.get_or_init(|| fetch_user()).await;
+pub async fn get_about() -> String {
+    ABOUT.get_or_init(|| fetch_about()).await;
 
     match ABOUT.get() {
         Some(user) => {
@@ -66,7 +66,7 @@ pub async fn get_user() -> String {
     }
 }
 
-pub async fn fetch_user() -> String {
+async fn fetch_about() -> String {
     match read_config() {
         Some(config) => {
             let info_url = format!("https://api.github.com/users/{}", config.github);
@@ -83,7 +83,7 @@ pub async fn fetch_user() -> String {
                         let user_info: UserInfo = info_response.json().await.unwrap();
                         let user_stars: UserStats = stats_response.json().await.unwrap();
 
-                        format_about(config.github, user_info, user_stars)
+                        format_about(config.github, config.langs, user_info, user_stars)
                     } else {
                         String::from(FETCH_GITHUB_ERROR)
                     }
@@ -115,7 +115,7 @@ fn read_config() -> Option<Config> {
 
 // Formatting functions
 
-fn format_about(username: String, info: UserInfo, stats: UserStats) -> String {
+fn format_about(username: String, langs: Vec<String>, info: UserInfo, stats: UserStats) -> String {
     let name = info.name.unwrap_or(String::from("-"));
     let bio = info.bio.unwrap_or(String::from("-"));
     let repos = info.public_repos;
@@ -128,23 +128,26 @@ fn format_about(username: String, info: UserInfo, stats: UserStats) -> String {
     let created_on = &info.created_at[..10];
 
     format!(
-        r#"<span class="info">{}</span>@<span class="info">github</span>
+        r#"<span class="grn semibold">{}</span>@<span class="grn semibold">github</span>
 ----------------------
-<span class="info">Name:</span> {}
-<span class="info">Bio:</span> {}
-<span class="info">Repos:</span> {}
-<span class="info">Stars:</span> {}
-<span class="info">Forks:</span> {}
-<span class="info">Company:</span> {}
-<span class="info">Location:</span> {}
-<span class="info">Followers:</span> {}
-<span class="info">Following:</span> {}
-<span class="info">Created on:</span> {}
+<span class="grn semibold">Name:</span> {}
+<span class="grn semibold">Bio:</span> {}
+<span class="grn semibold">Repos:</span> {}
+<span class="grn semibold">Langs:</span> {}
+<span class="grn semibold">Stars:</span> {}
+<span class="grn semibold">Forks:</span> {}
+<span class="grn semibold">Company:</span> {}
+<span class="grn semibold">Location:</span> {}
+<span class="grn semibold">Followers:</span> {}
+<span class="grn semibold">Following:</span> {}
+<span class="grn semibold">Created on:</span> {}
+
 {BLOCKS}"#,
         username,
         name,
         bio,
         repos,
+        format_langs(langs),
         stars,
         forks,
         company,
@@ -159,14 +162,14 @@ fn format_contacts(config: Config) -> String {
     let github = format!(
         r#"Contact info and links -
 
-  <a href="https://github.com/{}" target="_blank" style="color:MediumSlateBlue;font-weight:500;">Github</a>: github.com/{}"#,
+  <a href="https://github.com/{}" target="_blank" style="color:var(--purple);font-weight:500;">Github</a>: github.com/{}"#,
         config.github, config.github
     );
 
     let email = config.email.map(|email| {
         format!(
             r#"
-  <a href="mailto:{}" target="_blank" style="color:OrangeRed;font-weight:500;">Email</a>: {}"#,
+  <a href="mailto:{}" target="_blank" style="color:var(--orange);font-weight:500;">Email</a>: {}"#,
             email, email
         )
     });
@@ -174,7 +177,7 @@ fn format_contacts(config: Config) -> String {
     let linkedin = config.linkedin.map(|linkedin| {
                     format!(
             r#"
-  <a href="https://www.linkedin.com/{}" target="_blank" style="color:DodgerBlue;font-weight:500;">LinkedIn</a>: linkedin.com/{}"#,
+  <a href="https://www.linkedin.com/{}" target="_blank" style="color:var(--dblue);font-weight:500;">LinkedIn</a>: linkedin.com/{}"#,
             linkedin, linkedin
                     )
                 });
@@ -182,7 +185,7 @@ fn format_contacts(config: Config) -> String {
     let twitter = config.twitter.map(|twitter| {
                     format!(
             r#"
-  <a href="https://www.twitter.com/{}" target="_blank" style="color:RoyalBlue;font-weight:500;">Twitter/X</a>: @{}"#,
+  <a href="https://www.twitter.com/{}" target="_blank" style="color:(--blue);font-weight:500;">Twitter/X</a>: @{}"#,
             twitter, twitter
                     )
                 });
@@ -196,7 +199,31 @@ fn format_contacts(config: Config) -> String {
     )
 }
 
-pub const BLOCKS: &str = r#"
-<span class="blocks logo">█<span><span class="blocks command">█<span><span class="blocks logo">█<span><span class="blocks command">█<span><span class="blocks logo">█<span><span class="blocks command">█<span><span class="blocks logo">█<span><span class="blocks command">█<span>
-<span class="blocks title">█<span><span class="blocks">█<span><span class="blocks title">█<span><span class="blocks">█<span><span class="blocks title">█<span><span class="blocks">█<span><span class="blocks title">█<span><span class="blocks">█<span>
-"#;
+fn format_langs(langs: Vec<String>) -> String {
+    let mut res = String::new();
+
+    langs.iter().for_each(|lang| {
+        if *lang == String::from("Rust") {
+            res.push_str(r#"<span style="color:var(--orange);">Rust <span>"#)
+        }
+        if *lang == String::from("Python") {
+            res.push_str(r#"<span style="color:var(--blue);">Python <span>"#)
+        }
+        if *lang == String::from("C++") {
+            res.push_str(r#"<span style="color:var(--dblue);">C++ <span>"#)
+        }
+        if *lang == String::from("Haskell") {
+            res.push_str(r#"<span style="color:var(--purple);">Haskell <span>"#)
+        }
+        if *lang == String::from("JavaScript") {
+            res.push_str(r#"<span style="color:var(--yellow);">JavaScript <span>"#)
+        }
+        if *lang == String::from("TypeScript") {
+            res.push_str(r#"<span style="color:var(--blue);">TypeScript <span>"#)
+        }
+    });
+
+    res
+}
+
+const BLOCKS: &str = r#"<span class="blocks" style="color:var(--black)">█</span><span class="rd blocks">█</span><span class="grn blocks">█</span><span class="ylw blocks">█</span><span class="blu blocks">█</span><span class="blocks" style="color:var(--magenta)">█</span><span class="blocks" style="color:var(--cyan)">█</span><span class="blocks">█</span>"#;

@@ -17,7 +17,7 @@ impl Command {
         let inp = inp.split_once(' ').unwrap_or((inp, " "));
 
         match inp.0 {
-            "help" | "h" => Self::Help,
+            "help" | "h" | "termfolio" => Self::Help,
             "about" | "a" | "neofetch" => Self::About,
             "projects" | "projs" | "p" => Self::Projects,
             "experience" | "exp" | "xp" => Self::Experience,
@@ -29,12 +29,12 @@ impl Command {
 
     async fn printout(&self) -> String {
         match self {
-            Self::Help => format!("{}{}", texts::LOGO_DEF, texts::HELP),
-            Self::About => fetch::get_user().await,
+            Self::Help => format!("{}{}", texts::LOGO_V1, texts::HELP),
+            Self::About => fetch::get_about().await,
             Self::Projects => String::from("Help"),
             Self::Experience => String::from("Help"),
             Self::Contact => fetch::get_contacts().to_string(),
-            Self::Credits => format!("{}{}", texts::LOGO_ALT, texts::CREDITS),
+            Self::Credits => format!("{}{}", texts::LOGO_V2, texts::CREDITS),
             Self::Bash(bash) => Bash::printout(&bash),
         }
     }
