@@ -112,6 +112,7 @@ fn read_config() -> Option<Config> {
 
     CONFIG.get().cloned()?
 }
+//https://pinned.thrzl.xyz/shettysach
 
 // Formatting functions
 
@@ -221,9 +222,12 @@ fn format_langs(langs: Vec<String>) -> String {
         if *lang == String::from("TypeScript") {
             res.push_str(r#"<span style="color:var(--blue);">TypeScript <span>"#)
         }
+        if *lang == String::from("Bash") {
+            res.push_str(r#"<span style="color:var(--dgreen);">Bash <span>"#)
+        }
     });
 
     res
 }
 
-const BLOCKS: &str = r#"<span class="blocks" style="color:var(--black)">█</span><span class="rd blocks">█</span><span class="grn blocks">█</span><span class="ylw blocks">█</span><span class="blu blocks">█</span><span class="blocks" style="color:var(--magenta)">█</span><span class="blocks" style="color:var(--cyan)">█</span><span class="blocks">█</span>"#;
+const BLOCKS: &str = r#"<span class="blocks" style="color:var(--black)">█</span><span class="rd blocks">█</span><span class="grn blocks">█</span><span class="ylw blocks">█</span><span class="blu blocks">█</span><span class="blocks" style="color:var(--orange)">█</span><span class="blocks" style="color:var(--purple)">█</span><span class="blocks">█</span>"#;

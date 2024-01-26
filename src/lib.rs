@@ -4,9 +4,9 @@ mod texts;
 pub enum Command {
     Help,
     About,
-    Projects,
+    Repos,
     Experience,
-    Contact,
+    Links,
     Credits,
     Bash(Bash),
 }
@@ -19,9 +19,9 @@ impl Command {
         match inp.0 {
             "help" | "h" | "termfolio" => Self::Help,
             "about" | "a" | "neofetch" => Self::About,
-            "projects" | "projs" | "p" => Self::Projects,
+            "repos" | "r" | "projects" => Self::Repos,
             "experience" | "exp" | "xp" => Self::Experience,
-            "contacts" => Self::Contact,
+            "links" | "l" => Self::Links,
             "credits" | "c" | "C" => Self::Credits,
             _ => Command::Bash(Bash::from(inp.0, inp.1)),
         }
@@ -31,9 +31,9 @@ impl Command {
         match self {
             Self::Help => format!("{}{}", texts::LOGO_V1, texts::HELP),
             Self::About => fetch::get_about().await,
-            Self::Projects => String::from("Help"),
+            Self::Repos => String::from("Help"),
             Self::Experience => String::from("Help"),
-            Self::Contact => fetch::get_contacts().to_string(),
+            Self::Links => fetch::get_contacts().to_string(),
             Self::Credits => format!("{}{}", texts::LOGO_V2, texts::CREDITS),
             Self::Bash(bash) => Bash::printout(&bash),
         }
