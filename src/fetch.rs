@@ -1,12 +1,11 @@
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::sync::OnceLock;
 use tokio::sync::OnceCell;
 use tokio::try_join;
-
 // Error lines
 
 pub const READ_JSON_ERROR: &str = r#"<span class="rd semibold">Error reading config.json</span>"#;
-
 pub const FETCH_GITHUB_ERROR: &str =
     r#"<span class="rd semibold">Error fetching data from Github.</span>"#;
 
@@ -129,7 +128,7 @@ fn format_about(username: String, langs: Vec<String>, info: UserInfo, stats: Use
     let created_on = &info.created_at[..10];
 
     format!(
-        r#"<span class="grn semibold">{}</span>@<span class="grn semibold">github</span>
+        r#"<a href="https://www.github.com/{}" style="text-decoration:none" target="_blank"><span class="grn semibold">{}</span>@<span class="grn semibold">github</span></a>
 ----------------------
 <span class="grn semibold">Name:</span> {}
 <span class="grn semibold">Bio:</span> {}
@@ -144,6 +143,7 @@ fn format_about(username: String, langs: Vec<String>, info: UserInfo, stats: Use
 <span class="grn semibold">Created on:</span> {}
 
 {BLOCKS}"#,
+        username,
         username,
         name,
         bio,
@@ -201,33 +201,29 @@ fn format_contacts(config: Config) -> String {
 }
 
 fn format_langs(langs: Vec<String>) -> String {
-    let mut res = String::new();
+    let color_map: HashMap<&str, &str> = [
+        ("Rust", "orange"),
+        ("Python", "blue"),
+        ("C++", "dblue"),
+        ("Java", "red"),
+        ("Haskell", "purple"),
+        ("JavaScript", "yellow"),
+        ("TypeScript", "blue"),
+        ("Bash", "dgreen"),
+    ]
+    .into();
 
-    langs.iter().for_each(|lang| {
-        if *lang == String::from("Rust") {
-            res.push_str(r#"<span style="color:var(--orange);">Rust <span>"#)
-        }
-        if *lang == String::from("Python") {
-            res.push_str(r#"<span style="color:var(--blue);">Python <span>"#)
-        }
-        if *lang == String::from("C++") {
-            res.push_str(r#"<span style="color:var(--dblue);">C++ <span>"#)
-        }
-        if *lang == String::from("Haskell") {
-            res.push_str(r#"<span style="color:var(--purple);">Haskell <span>"#)
-        }
-        if *lang == String::from("JavaScript") {
-            res.push_str(r#"<span style="color:var(--yellow);">JavaScript <span>"#)
-        }
-        if *lang == String::from("TypeScript") {
-            res.push_str(r#"<span style="color:var(--blue);">TypeScript <span>"#)
-        }
-        if *lang == String::from("Bash") {
-            res.push_str(r#"<span style="color:var(--dgreen);">Bash <span>"#)
-        }
-    });
+    let formatted_langs: Vec<String> = langs
+        .into_iter()
+        .map(|lang| {
+            color_map.get(lang.as_str()).map_or_else(
+                || format!(r#"<span>{}</span>"#, lang),
+                |color| format!(r#"<span style="color:var(--{});">{}</span>"#, color, lang),
+            )
+        })
+        .collect();
 
-    res
+    formatted_langs.join(" ")
 }
 
 const BLOCKS: &str = r#"<span class="blocks" style="color:var(--black)">█</span><span class="rd blocks">█</span><span class="grn blocks">█</span><span class="ylw blocks">█</span><span class="blu blocks">█</span><span class="blocks" style="color:var(--orange)">█</span><span class="blocks" style="color:var(--purple)">█</span><span class="blocks">█</span>"#;

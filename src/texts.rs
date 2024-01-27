@@ -1,15 +1,15 @@
-pub const LOGO_V1: &str = r#"<span class="grn semibold">  ________________  __  _____________  __    ________ 
- /_  __/ ____/ __ \/  |/  / ____/ __ \/ /   /  _/ __ \
-  / / / __/ / /_/ / /|_/ / /_  / / / / /    / // / / /
- / / / /___/ _, _/ /  / / __/ / /_/ / /____/ // /_/ / 
-/_/ /_____/_/ |_/_/  /_/_/    \____/_____/___/\____/  
-</span>"#;
-
-pub const LOGO_V2: &str = r#"<span class="grn"> dMMMMMMP dMMMMMP dMMMMb  dMMMMMMMMb  dMMMMMP .aMMMb  dMP     dMP .aMMMb 
+pub const LOGO_V1: &str = r#"<span class="grn"> dMMMMMMP dMMMMMP dMMMMb  dMMMMMMMMb  dMMMMMP .aMMMb  dMP     dMP .aMMMb 
    dMP   dMP     dMP.dMP dMP"dMP"dMP dMP     dMP"dMP dMP     amr dMP"dMP 
   dMP   dMMMP   dMMMMK  dMP dMP dMP dMMMP   dMP dMP dMP     dMP dMP dMP  
  dMP   dMP     dMP"AMF dMP dMP dMP dMP     dMP.aMP dMP     dMP dMP.aMP   
 dMP   dMMMMMP dMP dMP dMP dMP dMP dMP      VMMMP" dMMMMMP dMP  VMMMP"    
+</span>"#;
+
+pub const LOGO_V2: &str = r#"<span class="grn semibold">  ________________  __  _____________  __    ________ 
+ /_  __/ ____/ __ \/  |/  / ____/ __ \/ /   /  _/ __ \
+  / / / __/ / /_/ / /|_/ / /_  / / / / /    / // / / /
+ / / / /___/ _, _/ /  / / __/ / /_/ / /____/ // /_/ / 
+/_/ /_____/_/ |_/_/  /_/_/    \____/_____/___/\____/  
 </span>"#;
 
 pub const HELP: &str = r#"

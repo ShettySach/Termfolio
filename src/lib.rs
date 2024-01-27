@@ -29,12 +29,12 @@ impl Command {
 
     async fn printout(&self) -> String {
         match self {
-            Self::Help => format!("{}{}", texts::LOGO_V1, texts::HELP),
+            Self::Help => format!("{}{}", texts::LOGO_V2, texts::HELP),
             Self::About => fetch::get_about().await,
             Self::Repos => String::from("Help"),
             Self::Experience => String::from("Help"),
             Self::Links => fetch::get_contacts().to_string(),
-            Self::Credits => format!("{}{}", texts::LOGO_V2, texts::CREDITS),
+            Self::Credits => format!("{}{}", texts::LOGO_V1, texts::CREDITS),
             Self::Bash(bash) => Bash::printout(&bash),
         }
     }
