@@ -31,7 +31,7 @@ impl Command {
         match self {
             Self::Help => format!("{}{}", texts::LOGO_V2, texts::HELP),
             Self::About => fetch::get_about().await,
-            Self::Repos => String::from("Help"),
+            Self::Repos => fetch::get_repos().await,
             Self::Experience => String::from("Help"),
             Self::Links => fetch::get_contacts().to_string(),
             Self::Credits => format!("{}{}", texts::LOGO_V1, texts::CREDITS),
