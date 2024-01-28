@@ -16,10 +16,10 @@ pub const HELP: &str = r#"
 Hello, welcome to <u class="blu semibold">Termfolio</u>. Type one of these commands -
 
   <span class="rd semibold">about</span> - View about me
-  <span class="rd semibold">help</span> - View this section
+  <span class="rd semibold">github</span> - View about Github profile 
   <span class="rd semibold">repos</span> - View about my pinned repos / projects
-  <span class="rd semibold">experience</span> - View about my experience
   <span class="rd semibold">links</span> - View contact info and links
+  <span class="rd semibold">help</span> - View this section
   <span class="rd semibold">credits</span> - View credits"#;
 
 pub const CREDITS: &str = r#"

@@ -3,9 +3,8 @@ mod texts;
 
 pub enum Command {
     Help,
-    About,
+    Github,
     Repos,
-    Experience,
     Links,
     Credits,
     Bash(Bash),
@@ -18,11 +17,10 @@ impl Command {
 
         match inp.0 {
             "help" | "h" | "termfolio" => Self::Help,
-            "about" | "a" | "neofetch" => Self::About,
+            "github" | "g" | "neofetch" => Self::Github,
             "repos" | "r" | "projects" => Self::Repos,
-            "experience" | "exp" | "xp" => Self::Experience,
-            "links" | "l" => Self::Links,
-            "credits" | "c" | "C" => Self::Credits,
+            "links" | "l" | "contacts" => Self::Links,
+            "credits" | "c" => Self::Credits,
             _ => Command::Bash(Bash::from(inp.0, inp.1)),
         }
     }
@@ -30,9 +28,8 @@ impl Command {
     async fn printout(&self) -> String {
         match self {
             Self::Help => format!("{}{}", texts::LOGO_V2, texts::HELP),
-            Self::About => fetch::get_about().await,
+            Self::Github => fetch::get_github().await,
             Self::Repos => fetch::get_repos().await,
-            Self::Experience => String::from("Help"),
             Self::Links => fetch::get_contacts().to_string(),
             Self::Credits => format!("{}{}", texts::LOGO_V1, texts::CREDITS),
             Self::Bash(bash) => Bash::printout(&bash),

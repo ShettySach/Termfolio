@@ -1,4 +1,3 @@
-use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::OnceLock;
@@ -47,16 +46,27 @@ struct UserStats {
     forks: u32,
 }
 
-#[derive(Deserialize, Serialize, Clone)]
-struct Repo {
-    name: String,
-    link: String,
-    description: String,
-    language: String,
-    language_color: String,
-    stars: String,
-    forks: String,
+#[derive(Deserialize, Serialize)]
+struct ApiResponse {
+    response: Vec<Repository>,
 }
+
+#[derive(Deserialize, Serialize, Clone)]
+struct Repository {
+    name: String,
+    repo: String,
+    description: String,
+    language: Language,
+    stars: u32,
+    forks: u32,
+}
+
+#[derive(Deserialize, Serialize, Clone)]
+struct Language {
+    name: String,
+    color: String,
+}
+
 // Functions
 
 fn read_config() -> Option<Config> {
@@ -70,26 +80,16 @@ fn read_config() -> Option<Config> {
     CONFIG.get().cloned()?
 }
 
-pub async fn get_about() -> String {
-    ABOUT.get_or_init(|| fetch_about()).await;
+pub async fn get_github() -> String {
+    ABOUT.get_or_init(|| fetch_github()).await;
 
     match ABOUT.get() {
-        Some(user) => {
-            let img = include_str!("img.txt");
-            let user = user.to_string();
-            format!(
-                r#"<div class="row">
-<div class="cols">{}</div>
-<div class="cols">{}</div>
-</div>"#,
-                img, user
-            )
-        }
+        Some(user) => user.to_string(),
         _ => String::from(FETCH_GITHUB_ERROR),
     }
 }
 
-async fn fetch_about() -> String {
+async fn fetch_github() -> String {
     match read_config() {
         Some(config) => {
             let info_url = format!("https://api.github.com/users/{}", config.github);
@@ -106,7 +106,7 @@ async fn fetch_about() -> String {
                         let user_info: UserInfo = info_response.json().await.unwrap();
                         let user_stats: UserStats = stats_response.json().await.unwrap();
 
-                        format_about(config.github, config.langs, user_info, user_stats)
+                        format_github(config.github, config.langs, user_info, user_stats)
                     } else {
                         String::from(FETCH_GITHUB_ERROR)
                     }
@@ -119,7 +119,7 @@ async fn fetch_about() -> String {
 }
 
 pub async fn get_repos() -> String {
-    REPOS.get_or_init(|| read_repos()).await;
+    REPOS.get_or_init(|| fetch_repos()).await;
 
     match REPOS.get() {
         Some(repos) => repos.to_string(),
@@ -127,31 +127,21 @@ pub async fn get_repos() -> String {
     }
 }
 
-#[allow(dead_code)]
-async fn read_repos() -> String {
-    match read_config() {
-        Some(_config) => {
-            let response = include_str!("repos.txt");
-            let repos: Vec<Repo> = serde_json::from_str(&response).unwrap();
-            format_repos(repos)
-        }
-        None => String::from(READ_JSON_ERROR),
-    }
-}
-
 async fn fetch_repos() -> String {
     match read_config() {
         Some(config) => {
-            let repos_url = format!("https://pinned.thrzl.xyz/{}", config.github);
-            let response = reqwest::get(&repos_url)
-                .await
-                .unwrap()
-                .text()
-                .await
-                .unwrap();
-            let _repos: Vec<Repo> = serde_json::from_str(&response).unwrap();
-            // format_repos(repos)
-            response
+            let repos_url = format!(
+                "https://gh-pinned-repos-api.ysnirix.xyz/api/get/?username={}",
+                config.github
+            );
+
+            match reqwest::get(&repos_url).await {
+                Ok(response) => {
+                    let repos: ApiResponse = response.json().await.unwrap();
+                    format_repos(config.github, repos.response)
+                }
+                Err(_) => String::from(FETCH_GITHUB_ERROR),
+            }
         }
         None => String::from(READ_JSON_ERROR),
     }
@@ -164,11 +154,10 @@ pub fn get_contacts() -> &'static String {
     })
 }
 
-//https://pinned.thrzl.xyz/shettysach
-
 // Formatting functions
 
-fn format_about(username: String, langs: Vec<String>, info: UserInfo, stats: UserStats) -> String {
+fn format_github(username: String, langs: Vec<String>, info: UserInfo, stats: UserStats) -> String {
+    let img = include_str!("img_g.txt");
     let name = info.name.unwrap_or(String::from("-"));
     let bio = info.bio.unwrap_or(String::from("-"));
     let repos = info.public_repos;
@@ -180,7 +169,7 @@ fn format_about(username: String, langs: Vec<String>, info: UserInfo, stats: Use
     let following = info.following;
     let created_on = &info.created_at[..10];
 
-    format!(
+    let text = format!(
         r#"<a href="https://www.github.com/{}" style="text-decoration:none" target="_blank"><span class="grn semibold">{}</span>@<span class="grn semibold">github</span></a>
 ----------------------
 <span class="grn semibold">Name:</span> {}
@@ -209,32 +198,63 @@ fn format_about(username: String, langs: Vec<String>, info: UserInfo, stats: Use
         followers,
         following,
         created_on
+    );
+    format!(
+        r#"<div class="row">
+<div class="cols">{}</div>
+<div class="cols">{}</div>
+</div>"#,
+        img, text
     )
 }
 
-fn format_repos(repos: Vec<Repo>) -> String {
+fn format_repos(username: String, repos: Vec<Repository>) -> String {
+    let img = include_str!("img_r.txt");
     let res: Vec<String> = repos
         .iter()
         .map(|repo| {
-            format!(
-                r#"<a href="{}" target="_blank" class="rd semibold">{}</a>
-  <span class="blu semibold">Description:</span> {}
-  <span class="blu semibold">Language:</span> <span style="color:{}">{}</span>
-  <span class="blu semibold">Stars:</span> {}
-  <span class="blu semibold">Forks:</span> {}
+            let text = format!(
+                r#"<a href="{}" target="_blank" class="blu semibold">{}</a>
+<span class="rd semibold">Description:</span> {}
+<span class="rd semibold">Language:</span> <span style="color:{}">{}</span>
+<span class="rd semibold">Stars:</span> <span class="ylw">{}</span>
+<span class="rd semibold">Forks:</span> <span class="ylw">{}</span>
+
         "#,
-                repo.link,
+                repo.repo,
                 repo.name,
                 repo.description,
-                repo.language_color,
-                repo.language,
+                repo.language.color,
+                repo.language.name,
                 repo.stars,
                 repo.forks
+            );
+
+            format!(
+                r#"<div class="row">
+<div class="cols" style="max-width: 50%; margin: 35;">{}</div>
+<div class="cols" style="max-width: 50%; margin: 35;" >{}</div>
+</div>"#,
+                img, text
             )
         })
         .collect();
 
-    res.join("\n")
+    let all_link = format!(
+        r#"<a href="https://www.github.com/{}?tab=repositories" target="_blank" class="blu semibold">All repos</a>
+<span class="rd semibold">Description:</span> All my Github repositories"#,
+        username
+    );
+
+    let all = format!(
+        r#"<div class="row">
+<div class="cols" style="max-width: 50%; margin: 35;">{}</div>
+<div class="cols" style="max-width: 50%; margin: 35;" >{}</div>
+</div>"#,
+        img, all_link
+    );
+
+    format!("{}\n{}", res.join("\n"), all)
 }
 
 fn format_contacts(config: Config) -> String {
