@@ -1,9 +1,10 @@
-use leptos::ev::SubmitEvent;
+use leptos::ev::{keydown, KeyboardEvent, SubmitEvent};
 use leptos::html::{Form, Input};
 use leptos::{
     component, create_effect, create_node_ref, create_signal, spawn_local, view, For, IntoView,
-    NodeRef, SignalGet, SignalUpdate,
+    NodeRef, SignalGet, SignalGetUntracked, SignalUpdate, WriteSignal,
 };
+use leptos_use::use_event_listener;
 
 fn main() {
     leptos::mount_to_body(|| view! { <Base/> });
@@ -12,33 +13,29 @@ fn main() {
 #[component]
 fn Base() -> impl IntoView {
     let (prompts, set_prompts) = create_signal(1);
-
-    let add_prompt = move |_| {
-        set_prompts.update(|prompts| {
-            *prompts += 1;
-        });
-    };
+    let history: Vec<String> = vec!["1".to_string(), "2".to_string(), "3".to_string()];
 
     let prompt_list = move || (0..prompts.get()).collect::<Vec<_>>();
 
     view! {
         <div>
-                <For
-                    each = prompt_list
-                    key = |&prompt| prompt
-                    children = move |_| {
-                        view! {
-                            <Prompt on:submit=add_prompt/>
-                        }
+            <For
+                each = prompt_list
+                key = |&prompt| prompt
+                children = move |_| {
+                    view! {
+                        <Prompt submitter=set_prompts history=history.clone()/>
                     }
-                />
+                }
+            />
         </div>
     }
 }
 
 #[component]
-fn Prompt() -> impl IntoView {
+fn Prompt(submitter: WriteSignal<i32>, history: Vec<String>) -> impl IntoView {
     let (out, set_out) = create_signal(String::new());
+    let (history_index, set_history_index) = create_signal(0);
 
     let input_element: NodeRef<Input> = create_node_ref();
     let form_element: NodeRef<Form> = create_node_ref();
@@ -49,9 +46,10 @@ fn Prompt() -> impl IntoView {
 
         spawn_local(async move {
             set_out(termfolio::Command::process(&value).await);
+            submitter.update(|prompts| {
+                *prompts += 1;
+            });
         });
-
-        form_element().unwrap().set_inert(true);
     };
 
     create_effect(move |_| {
@@ -59,6 +57,31 @@ fn Prompt() -> impl IntoView {
             let _ = ref_input.on_mount(|input| {
                 let _ = input.focus();
             });
+        }
+    });
+
+    let _ = use_event_listener(input_element, keydown, move |ev: KeyboardEvent| {
+        let index = history_index.get_untracked();
+
+        match &ev.key()[..] {
+            "ArrowUp" => {
+                if index < history.len() {
+                    input_element().unwrap().set_value(&history[index]);
+                    set_history_index.update(|history_index| *history_index += 1);
+                }
+            }
+            "ArrowDown" => {
+                if index > 1 {
+                    input_element().unwrap().set_value(&history[index - 2]);
+                    set_history_index.update(|history_index| *history_index -= 1);
+                } else {
+                    if input_element.get_untracked().unwrap().value() != "" {
+                        set_history_index.update(|history_index| *history_index -= 1);
+                        input_element.get_untracked().unwrap().set_value("");
+                    }
+                }
+            }
+            _ => {}
         }
     });
 
@@ -73,14 +96,3 @@ fn Prompt() -> impl IntoView {
         </pre>
     }
 }
-
-/*
-let prev_commands = window_event_listener(keydown, move |ev: KeyboardEvent| {
-    let word = "h";
-
-    if ev.key() == "ArrowUp" {
-        input_element().unwrap().set_value(word);
-    }
-});
-on_cleanup(move || prev_commands.remove());
-*/

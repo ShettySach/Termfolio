@@ -242,7 +242,7 @@ fn format_repos(username: String, repos: Vec<Repository>) -> String {
 
     let all_link = format!(
         r#"<a href="https://www.github.com/{}?tab=repositories" target="_blank" class="blu semibold">All repos</a>
-<span class="rd semibold">Description:</span> All my Github repositories"#,
+<span class="rd semibold">Description:</span> All my Github repositories."#,
         username
     );
 
