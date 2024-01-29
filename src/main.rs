@@ -5,6 +5,7 @@ use leptos::{
     NodeRef, SignalGet, SignalGetUntracked, SignalUpdate, WriteSignal,
 };
 use leptos_use::use_event_listener;
+use std::collections::VecDeque;
 
 fn main() {
     leptos::mount_to_body(|| view! { <Base/> });
@@ -13,7 +14,7 @@ fn main() {
 #[component]
 fn Base() -> impl IntoView {
     let (prompts, set_prompts) = create_signal(1);
-    let history: Vec<String> = vec!["1".to_string(), "2".to_string(), "3".to_string()];
+    let (history, set_history) = create_signal(VecDeque::new());
 
     let prompt_list = move || (0..prompts.get()).collect::<Vec<_>>();
 
@@ -24,7 +25,7 @@ fn Base() -> impl IntoView {
                 key = |&prompt| prompt
                 children = move |_| {
                     view! {
-                        <Prompt submitter=set_prompts history=history.clone()/>
+                        <Prompt submitter=set_prompts updater=set_history history=history.get()/>
                     }
                 }
             />
@@ -33,7 +34,11 @@ fn Base() -> impl IntoView {
 }
 
 #[component]
-fn Prompt(submitter: WriteSignal<i32>, history: Vec<String>) -> impl IntoView {
+fn Prompt(
+    submitter: WriteSignal<u32>,
+    updater: WriteSignal<VecDeque<String>>,
+    history: VecDeque<String>,
+) -> impl IntoView {
     let (out, set_out) = create_signal(String::new());
     let (history_index, set_history_index) = create_signal(0);
 
@@ -46,6 +51,11 @@ fn Prompt(submitter: WriteSignal<i32>, history: Vec<String>) -> impl IntoView {
 
         spawn_local(async move {
             set_out(termfolio::Command::process(&value).await);
+
+            updater.update(|hist| {
+                hist.push_front(value);
+            });
+
             submitter.update(|prompts| {
                 *prompts += 1;
             });
