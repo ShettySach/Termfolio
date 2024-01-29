@@ -53,8 +53,14 @@ fn Prompt(
             set_out(termfolio::Command::process(&value).await);
 
             updater.update(|hist| {
-                hist.push_front(value);
+                hist.push_front(value.clone());
             });
+
+            if value == "clear" {
+                submitter.update(|prompts| {
+                    *prompts = 0;
+                });
+            }
 
             submitter.update(|prompts| {
                 *prompts += 1;
