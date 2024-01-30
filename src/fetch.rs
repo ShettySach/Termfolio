@@ -6,6 +6,9 @@ use tokio::try_join;
 use crate::formats::*;
 use crate::texts::{FETCH_GITHUB_ERROR, READ_JSON_ERROR};
 
+// Config
+const JSON: &str = include_str!("../configs/config.json");
+
 // Once statics
 
 static CONFIG: OnceLock<Option<Config>> = OnceLock::new();
@@ -92,10 +95,9 @@ pub struct Language {
 }
 
 // Once Functions
-fn read_config() -> Option<Config> {
-    let config_json = include_str!("config.json");
 
-    CONFIG.get_or_init(|| match serde_json::from_str::<Config>(&config_json) {
+fn read_config() -> Option<Config> {
+    CONFIG.get_or_init(|| match serde_json::from_str::<Config>(&JSON) {
         Ok(config) => Some(config),
         Err(_) => None,
     });
@@ -135,7 +137,7 @@ pub fn get_contacts() -> &'static String {
     })
 }
 
-// Functions
+// Fetch functions
 
 async fn fetch_github() -> String {
     match read_config() {

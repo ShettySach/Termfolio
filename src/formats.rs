@@ -1,8 +1,8 @@
 use crate::fetch::{About, Config, Repository, UserInfo, UserStats};
 use std::collections::HashMap;
 
-const IMG_G: &str = include_str!("img_g.txt");
-const IMG_R: &str = include_str!("img_r.txt");
+const IMG_G: &str = include_str!("../configs/img_g.txt");
+const IMG_R: &str = include_str!("../configs/img_r.txt");
 
 pub fn format_about(about: About) -> String {
     let exp_string: String = about
@@ -132,8 +132,8 @@ pub fn format_github(
 
     format!(
         r#"<div class="row">
-<div class="cols">{}</div>
-<div class="cols">{}</div>
+<div class="gcols">{}</div>
+<div class="gcols">{}</div>
 </div>"#,
         IMG_G, text
     )
@@ -162,8 +162,8 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
 
             format!(
                 r#"<div class="row">
-<div class="cols" style="max-width: 50%; margin: 35;">{}</div>
-<div class="cols" style="max-width: 50%; margin: 35;" >{}</div>
+<div class="rcols">{}</div>
+<div class="rcols">{}</div>
 </div>"#,
                 IMG_R, text
             )
@@ -178,8 +178,8 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
 
     let all = format!(
         r#"<div class="row">
-<div class="cols" style="max-width: 50%; margin: 35;">{}</div>
-<div class="cols" style="max-width: 50%; margin: 35;" >{}</div>
+<div class="rcols">{}</div>
+<div class="rcols">{}</div>
 </div>"#,
         IMG_R, all_link
     );
