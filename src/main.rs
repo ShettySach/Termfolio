@@ -2,7 +2,7 @@ use leptos::ev::{keydown, KeyboardEvent, SubmitEvent};
 use leptos::html::{Form, Input};
 use leptos::{
     component, create_effect, create_node_ref, create_signal, spawn_local, view, For, IntoView,
-    NodeRef, SignalGet, SignalGetUntracked, SignalUpdate, WriteSignal,
+    NodeRef, ReadSignal, SignalGet, SignalGetUntracked, SignalUpdate, WriteSignal,
 };
 use leptos_use::use_event_listener;
 use std::collections::VecDeque;
@@ -25,7 +25,7 @@ fn Base() -> impl IntoView {
                 key = |&prompt| prompt
                 children = move |_| {
                     view! {
-                        <Prompt submitter=set_prompts updater=set_history history=history.get()/>
+                        <Prompt submitter=set_prompts updater=set_history history=history/>
                     }
                 }
             />
@@ -37,7 +37,7 @@ fn Base() -> impl IntoView {
 fn Prompt(
     submitter: WriteSignal<u32>,
     updater: WriteSignal<VecDeque<String>>,
-    history: VecDeque<String>,
+    history: ReadSignal<VecDeque<String>>,
 ) -> impl IntoView {
     let (out, set_out) = create_signal(String::new());
     let (history_index, set_history_index) = create_signal(0);
@@ -50,17 +50,33 @@ fn Prompt(
         let value = input_element().unwrap().value();
 
         spawn_local(async move {
-            set_out(termfolio::Command::process(&value).await);
+            match &value[..] {
+                "clear" => {
+                    submitter.update(|prompts| {
+                        *prompts = 0;
+                    });
+                }
+                "history" => {
+                    let hist: Vec<String> = history().clone().into();
+                    let hist: Vec<String> = hist
+                        .iter()
+                        .rev()
+                        .enumerate()
+                        .map(|(i, c)| format!("{} {}", i + 1, c))
+                        .collect();
+                    set_out(hist.join("\n"));
+                }
+                _ => set_out(termfolio::Command::process(&value).await),
+            }
 
             updater.update(|hist| {
-                hist.push_front(value.clone());
+                if value != "" {
+                    hist.push_front(value);
+                    if hist.len() > 15 {
+                        hist.pop_back();
+                    }
+                }
             });
-
-            if value == "clear" {
-                submitter.update(|prompts| {
-                    *prompts = 0;
-                });
-            }
 
             submitter.update(|prompts| {
                 *prompts += 1;
@@ -81,14 +97,14 @@ fn Prompt(
 
         match &ev.key()[..] {
             "ArrowUp" => {
-                if index < history.len() {
-                    input_element().unwrap().set_value(&history[index]);
+                if index < history().len() {
+                    input_element().unwrap().set_value(&history()[index]);
                     set_history_index.update(|history_index| *history_index += 1);
                 }
             }
             "ArrowDown" => {
                 if index > 1 {
-                    input_element().unwrap().set_value(&history[index - 2]);
+                    input_element().unwrap().set_value(&history()[index - 2]);
                     set_history_index.update(|history_index| *history_index -= 1);
                 } else {
                     if input_element.get_untracked().unwrap().value() != "" {
@@ -112,3 +128,15 @@ fn Prompt(
         </pre>
     }
 }
+
+/*
+if ev.ctrl_key() && &ev.key() == "l" {
+    submitter.update(|prompts| {
+        *prompts = 0;
+    });
+
+    submitter.update(|prompts| {
+        *prompts += 1;
+    });
+}
+*/

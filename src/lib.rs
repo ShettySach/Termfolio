@@ -1,8 +1,10 @@
 mod fetch;
+mod formats;
 mod texts;
 
 pub enum Command {
     Help,
+    About,
     Github,
     Repos,
     Links,
@@ -17,6 +19,7 @@ impl Command {
 
         match inp.0 {
             "help" | "h" | "termfolio" => Self::Help,
+            "about" | "a" => Self::About,
             "github" | "g" | "neofetch" => Self::Github,
             "repos" | "r" | "projects" => Self::Repos,
             "links" | "l" | "contacts" => Self::Links,
@@ -28,6 +31,7 @@ impl Command {
     async fn printout(&self) -> String {
         match self {
             Self::Help => format!("{}{}", texts::LOGO_V2, texts::HELP),
+            Self::About => fetch::get_about(),
             Self::Github => fetch::get_github().await,
             Self::Repos => fetch::get_repos().await,
             Self::Links => fetch::get_contacts().to_string(),
@@ -46,7 +50,7 @@ pub enum Bash {
     Go,
     Create,
     Destroy,
-    Cpy,
+    Duplicate,
     Move,
     Show,
     Search,
@@ -65,13 +69,13 @@ impl Bash {
             "cd" => Self::Go,
             "mkdir" | "touch" => Self::Create,
             "rm" | "rmdir" => Self::Destroy,
-            "cp" => Self::Cpy,
+            "cp" => Self::Duplicate,
             "mv" => Self::Move,
             "ls" | "cat" => Self::Show,
             "grep" | "which" | "find" => Self::Search,
             "pwd" => Self::Where,
-            "nano" | "vim" | "nvim" | "emacs" | "hx" => Self::Edit,
-            "sudo" | "chmod" => Self::Power,
+            "nano" | "vi" | "vim" | "nvim" | "emacs" | "hx" => Self::Edit,
+            "su" | "sudo" | "chmod" => Self::Power,
             "whoami" => Self::You,
             "echo" => Self::Echo(String::from(inp1)),
             "" => Self::Nothing,
@@ -84,13 +88,13 @@ impl Bash {
             Self::Go => String::from("Nowhere to go."),
             Self::Create => String::from("Nowhere to create."),
             Self::Destroy => String::from("Nothing to destroy."),
-            Self::Cpy => String::from("Nowhere to duplicate."),
+            Self::Duplicate => String::from("Nowhere to duplicate."),
             Self::Move => String::from("Nowhere to move."),
             Self::Show => String::from("Nothing to see."),
             Self::Search => String::from("Nowhere to search."),
             Self::Where => String::from("You are here."),
-            Self::Edit => String::from("Nothing to make or change."),
-            Self::Power => String::from("No power."),
+            Self::Edit => String::from("Nothing to change."),
+            Self::Power => String::from("With great power comes great responsibility."),
             Self::You => String::from("Despite everything, it's still you."),
             Self::Echo(s) => String::from(s).replace("<", "‹").replace(">", "›"),
             Self::Nothing => String::new(),

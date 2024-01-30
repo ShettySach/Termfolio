@@ -27,3 +27,7 @@ Made by <span class="rd semibold">Sachith C Shetty</span>
   
   <a href="https://github.com/shettysach" target="_blank" class="blu semibold">Github</a>: github.com/shettysach
   <a href="https://github.com/shettysach/termfolio" target="_blank" class="blu semibold">Repo</a>: github.com/shettysach/termfolio"#;
+
+pub const READ_JSON_ERROR: &str = r#"<span class="rd semibold">Error reading config.json</span>"#;
+pub const FETCH_GITHUB_ERROR: &str =
+    r#"<span class="rd semibold">Error fetching data from Github.</span>"#;
