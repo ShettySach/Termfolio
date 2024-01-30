@@ -11,35 +11,6 @@
   --dblue: DodgerBlue;
 }
 
-.catpuccin {
-  --white: #f5e0dc;
-  --black: #181825;
-  --green: #a6d189;
-  --red: #e78284;
-  --blue: #74c7ec;
-  --yellow: Gold;
-  --magenta: Orchid;
-  --cyan: #74c7ec;
-  --orange: #fab387;
-  --purple: #cba6f7;
-  --dgreen: #94e2d5;
-  --dblue: #89b4fa;
-}
-
-.tokyo-night {
-  --white: #c0caf5;
-  --black: #0d1221;
-  --green: #4fd6be;
-  --red: #c53b53;
-  --blue: #7dcfff;
-  --yellow: #ffc777;
-  --orange: #ff757f;
-  --purple: #bb9af7;
-  --dgreen: #c3e88d;
-  --dblue: #7aa2f7;
-
-}
-
 * {
   font-family: "IBM Plex Mono";
   font-size: 20px;

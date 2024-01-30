@@ -2,7 +2,7 @@ use leptos::ev::{keydown, KeyboardEvent, SubmitEvent};
 use leptos::html::{Form, Input};
 use leptos::{
     component, create_effect, create_node_ref, create_signal, spawn_local, view, IntoView, NodeRef,
-    ReadSignal, SignalGetUntracked, SignalUpdate, WriteSignal,
+    ReadSignal, SignalGet, SignalGetUntracked, SignalUpdate, WriteSignal,
 };
 use leptos_use::{
     use_color_mode_with_options, use_cycle_list_with_options, use_event_listener, ColorMode,
@@ -28,7 +28,7 @@ pub fn Prompt(
             .initial_value(ColorMode::from("classic")),
     );
 
-    let UseCycleListReturn { next, .. } = use_cycle_list_with_options(
+    let UseCycleListReturn { state, next, .. } = use_cycle_list_with_options(
         vec![
             ColorMode::Custom("classic".into()),
             ColorMode::Custom("catpuccin".into()),
@@ -59,8 +59,10 @@ pub fn Prompt(
                         .collect();
                     set_out(hist.join("\n"));
                 }
-                "theme" => {
+                "theme" | "t" | "wal" => {
                     next();
+                    let new_theme = state.get_untracked();
+                    set_out(format!("Theme changed to: {new_theme}"));
                 }
                 _ => set_out(termfolio::Command::process(&value).await),
             }
@@ -69,7 +71,7 @@ pub fn Prompt(
                 if value != "" {
                     let value = value.replace("<", "‹").replace(">", "›");
                     hist.push_front(value);
-                    if hist.len() > 10 {
+                    if hist.len() > 20 {
                         hist.pop_back();
                     }
                 }

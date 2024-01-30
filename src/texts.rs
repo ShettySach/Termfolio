@@ -20,6 +20,7 @@ Hello, welcome to <u class="blu semibold">Termfolio</u>. Type one of these comma
   <span class="rd semibold">repos</span> - View about my pinned repos / projects
   <span class="rd semibold">links</span> - View contact info and links
   <span class="rd semibold">help</span> - View this help section
+  <span class="rd semibold">theme</span> - Cycle through themes
   <span class="rd semibold">credits</span> - View credits and repo"#;
 
 pub const CREDITS: &str = r#"
