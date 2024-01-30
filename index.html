@@ -113,26 +113,38 @@
     word-wrap: break-word;
     margin-bottom: 22px;
   }
-  
-  /* About */
- 
-  .acols {
+
+  .acols,
+  .gcols,
+  .rcols {
     flex-direction: row;
+    box-sizing: border-box;
+    float: left;
+  }
+
+
+  /* About */
+
+  .acols {
     flex: 0 0 calc(60%);
     outline-offset: 15px;
     outline: solid;
-    box-sizing: border-box;
-    margin: 20px;
-    float: left;
+    outline-color: var(--green);
   }
-  
+
   /* Github fetch */
-  .cols {
-    flex-direction: row;
+
+  .gcols {
     flex: 0 0 calc(50% - 15px);
-    box-sizing: border-box;
     margin: 20px;
-    float: left;
+  }
+
+  /* Repos fetch */
+
+  .rcols {
+    max-width: 50%;
+    flex: 0 0 calc(50% - 35px);
+    margin: 50px;
   }
 
   .row {
