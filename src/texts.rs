@@ -19,10 +19,11 @@ Hello, welcome to <u class="blu semibold">Termfolio</u>. Type one of these comma
   <span class="rd semibold">github</span> - View about Github profile 
   <span class="rd semibold">repos</span> - View about my pinned repos / projects
   <span class="rd semibold">links</span> - View contact info and links
-  <span class="rd semibold">help</span> - View this section
-  <span class="rd semibold">credits</span> - View credits"#;
+  <span class="rd semibold">help</span> - View this help section
+  <span class="rd semibold">credits</span> - View credits and repo"#;
 
 pub const CREDITS: &str = r#"
+Terminal style portfolio website, made using Rust.
 Made by <span class="rd semibold">Sachith C Shetty</span> 
   
   <a href="https://github.com/shettysach" target="_blank" class="blu semibold">Github</a>: github.com/shettysach

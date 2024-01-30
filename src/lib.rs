@@ -1,6 +1,6 @@
 mod fetch;
-mod formats;
 mod texts;
+mod theming;
 
 pub enum Command {
     Help,

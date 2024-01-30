@@ -3,8 +3,9 @@ use std::sync::OnceLock;
 use tokio::sync::OnceCell;
 use tokio::try_join;
 
-use crate::formats::*;
+mod formats;
 use crate::texts::{FETCH_GITHUB_ERROR, READ_JSON_ERROR};
+use formats::*;
 
 // Config
 const JSON: &str = include_str!("../configs/config.json");

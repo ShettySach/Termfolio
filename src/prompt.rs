@@ -47,7 +47,7 @@ pub fn Prompt(
                 if value != "" {
                     let value = value.replace("<", "‹").replace(">", "›");
                     hist.push_front(value);
-                    if hist.len() > 15 {
+                    if hist.len() > 10 {
                         hist.pop_back();
                     }
                 }

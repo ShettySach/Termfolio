@@ -1,8 +1,8 @@
 use crate::fetch::{About, Config, Repository, UserInfo, UserStats};
 use std::collections::HashMap;
 
-const IMG_G: &str = include_str!("../configs/img_g.txt");
-const IMG_R: &str = include_str!("../configs/img_r.txt");
+const IMG_G: &str = include_str!("../../configs/img_g.txt");
+const IMG_R: &str = include_str!("../../configs/img_r.txt");
 
 pub fn format_about(about: About) -> String {
     let exp_string: String = about
@@ -75,9 +75,11 @@ pub fn format_about(about: About) -> String {
     format!(
         r#"
 
+
 <div class="row" style="display: flex; flex-direction: row; align-items: center; justify-content: center;"> 
 <div class="acols"">{}</div>
-</div>"#,
+</div>
+"#,
         text
     )
 }
