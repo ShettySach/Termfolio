@@ -1,0 +1,155 @@
+:root {
+  --white: White;
+  --black: Black;
+  --green: LimeGreen;
+  --red: Red;
+  --blue: DeepSkyBlue;
+  --yellow: Gold;
+  --orange: OrangeRed;
+  --purple: MediumSlateBlue;
+  --dgreen: MediumSeaGreen;
+  --dblue: DodgerBlue;
+}
+
+.catpuccin {
+  --white: #f5e0dc;
+  --black: #181825;
+  --green: #a6d189;
+  --red: #e78284;
+  --blue: #74c7ec;
+  --yellow: Gold;
+  --magenta: Orchid;
+  --cyan: #74c7ec;
+  --orange: #fab387;
+  --purple: #cba6f7;
+  --dgreen: #94e2d5;
+  --dblue: #89b4fa;
+}
+
+.tokyo-night {
+  --white: #c0caf5;
+  --black: #0d1221;
+  --green: #4fd6be;
+  --red: #c53b53;
+  --blue: #7dcfff;
+  --yellow: #ffc777;
+  --orange: #ff757f;
+  --purple: #bb9af7;
+  --dgreen: #c3e88d;
+  --dblue: #7aa2f7;
+
+}
+
+* {
+  font-family: "IBM Plex Mono";
+  font-size: 20px;
+  background: var(--black);
+  color: var(--white);
+  /* text-shadow: 0px 5px 10px currentColor; */
+}
+
+body {
+  margin: 25px;
+}
+
+input {
+  font-size: 100%;
+  outline: none;
+  border: none;
+  width: 460px;
+}
+
+form {
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 0px;
+  caret-shape: block;
+  caret-color: var(--green);
+  font-weight: 500;
+}
+
+.semibold {
+  font-weight: 500;
+}
+
+.rd {
+  color: var(--red);
+}
+
+.grn {
+  color: var(--green);
+}
+
+.ylw {
+  color: var(--yellow);
+}
+
+.blu {
+  color: var(--blue);
+}
+
+.inline {
+  display: inline;
+  color: var(--green);
+}
+
+.output {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-bottom: 22px;
+}
+
+.acols,
+.gcols,
+.rcols {
+  flex-direction: row;
+  box-sizing: border-box;
+  float: left;
+}
+
+
+/* About */
+
+.acols {
+  flex: 0 0 calc(60%);
+  outline-offset: 15px;
+  outline: solid;
+  outline-color: var(--green);
+}
+
+/* Github fetch */
+
+.gcols {
+  flex: 0 0 calc(50% - 15px);
+  margin: 20px;
+}
+
+/* Repos fetch */
+
+.rcols {
+  max-width: 50%;
+  flex: 0 0 calc(50% - 35px);
+  margin: 50px;
+}
+
+.row {
+  margin-top: -45px;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+  align-items: baseline;
+}
+
+/* Color blocks */
+
+.blocks {
+  font-size: 35px;
+}
+
+a {
+  text-decoration-thickness: 1px;
+  font-weight: 500;
+}

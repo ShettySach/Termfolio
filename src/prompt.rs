@@ -4,7 +4,10 @@ use leptos::{
     component, create_effect, create_node_ref, create_signal, spawn_local, view, IntoView, NodeRef,
     ReadSignal, SignalGetUntracked, SignalUpdate, WriteSignal,
 };
-use leptos_use::use_event_listener;
+use leptos_use::{
+    use_color_mode_with_options, use_cycle_list_with_options, use_event_listener, ColorMode,
+    UseColorModeOptions, UseColorModeReturn, UseCycleListOptions, UseCycleListReturn,
+};
 use std::collections::VecDeque;
 
 #[component]
@@ -19,9 +22,25 @@ pub fn Prompt(
     let input_element: NodeRef<Input> = create_node_ref();
     let form_element: NodeRef<Form> = create_node_ref();
 
+    let UseColorModeReturn { mode, set_mode, .. } = use_color_mode_with_options(
+        UseColorModeOptions::default()
+            .custom_modes(vec!["catpuccin".into(), "tokyo-night".into()])
+            .initial_value(ColorMode::from("classic")),
+    );
+
+    let UseCycleListReturn { next, .. } = use_cycle_list_with_options(
+        vec![
+            ColorMode::Custom("classic".into()),
+            ColorMode::Custom("catpuccin".into()),
+            ColorMode::Custom("tokyo-night".into()),
+        ],
+        UseCycleListOptions::default().initial_value(Some((mode, set_mode).into())),
+    );
+
     let on_submit = move |ev: SubmitEvent| {
         ev.prevent_default();
         let value = input_element().unwrap().value();
+        let next = next.clone();
 
         spawn_local(async move {
             match &value[..] {
@@ -39,6 +58,9 @@ pub fn Prompt(
                         .map(|(i, c)| format!("{} {}", i + 1, c))
                         .collect();
                     set_out(hist.join("\n"));
+                }
+                "theme" => {
+                    next();
                 }
                 _ => set_out(termfolio::Command::process(&value).await),
             }
