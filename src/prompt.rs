@@ -150,7 +150,7 @@ pub fn Prompt(
             on:submit=on_submit node_ref=form_element>
             <p class="inline">"user@termfolio:~$ "</p>
             <input
-                id="prompt-form"
+                id="prompt-form" autocomplete="off"
                 class="inp" type="text" maxlength=42 spellcheck="false"
                 value=out node_ref=input_element/>
         </form>
