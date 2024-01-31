@@ -2,7 +2,7 @@ use leptos::ev::{keydown, KeyboardEvent, SubmitEvent};
 use leptos::html::{Form, Input};
 use leptos::{
     component, create_effect, create_node_ref, create_signal, spawn_local, view, IntoView, NodeRef,
-    ReadSignal, SignalGet, SignalGetUntracked, SignalUpdate, WriteSignal,
+    ReadSignal, SignalGetUntracked, SignalUpdate, WriteSignal,
 };
 use leptos_use::{
     use_color_mode_with_options, use_cycle_list_with_options, use_event_listener, ColorMode,
@@ -24,14 +24,15 @@ pub fn Prompt(
 
     let UseColorModeReturn { mode, set_mode, .. } = use_color_mode_with_options(
         UseColorModeOptions::default()
-            .custom_modes(vec!["catpuccin".into(), "tokyo-night".into()])
-            .initial_value(ColorMode::from("classic")),
+            .custom_modes(vec!["catpuccin".into(), "nord".into(), "classic".into()])
+            .initial_value(ColorMode::from("tokyo-night")),
     );
 
     let UseCycleListReturn { state, next, .. } = use_cycle_list_with_options(
         vec![
-            ColorMode::Custom("classic".into()),
             ColorMode::Custom("catpuccin".into()),
+            ColorMode::Custom("nord".into()),
+            ColorMode::Custom("classic".into()),
             ColorMode::Custom("tokyo-night".into()),
         ],
         UseCycleListOptions::default().initial_value(Some((mode, set_mode).into())),
@@ -43,7 +44,10 @@ pub fn Prompt(
         let next = next.clone();
 
         spawn_local(async move {
-            match &value[..] {
+            let val = value.trim();
+            let val = val.split_once(' ').unwrap_or((val, " "));
+
+            match val.0 {
                 "clear" => {
                     submitter.update(|prompts| {
                         *prompts = 0;
@@ -62,9 +66,11 @@ pub fn Prompt(
                 "theme" | "t" | "wal" => {
                     next();
                     let new_theme = state.get_untracked();
-                    set_out(format!("Theme changed to: {new_theme}"));
+                    set_out(format!(
+                        r#"Theme changed to: <b class="grn">{new_theme}</b>"#
+                    ));
                 }
-                _ => set_out(termfolio::Command::process(&value).await),
+                _ => set_out(termfolio::Command::process(val.0, val.1).await),
             }
 
             updater.update(|hist| {

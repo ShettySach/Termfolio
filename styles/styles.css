@@ -1,14 +1,14 @@
 :root {
-  --white: White;
-  --black: Black;
-  --green: LimeGreen;
-  --red: Red;
-  --blue: DeepSkyBlue;
-  --yellow: Gold;
-  --orange: OrangeRed;
-  --purple: MediumSlateBlue;
-  --dgreen: MediumSeaGreen;
-  --dblue: DodgerBlue;
+  --white: #c0caf5;
+  --black: #1a1b26;
+  --green: #4fd6be;
+  --red: #c53b53;
+  --blue: #7dcfff;
+  --yellow: #ffc777;
+  --orange: #ff757f;
+  --purple: #bb9af7;
+  --dgreen: #c3e88d;
+  --dblue: #7aa2f7;
 }
 
 * {

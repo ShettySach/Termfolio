@@ -14,27 +14,25 @@
 .catpuccin {
   --white: #f5e0dc;
   --black: #181825;
-  --green: #a6d189;
+  --green: #cba6f7;
   --red: #e78284;
   --blue: #74c7ec;
-  --yellow: Gold;
-  --magenta: Orchid;
-  --cyan: #74c7ec;
+  --yellow: #f9e2af;
   --orange: #fab387;
-  --purple: #cba6f7;
+  --purple: #b4befe;
   --dgreen: #94e2d5;
   --dblue: #89b4fa;
 }
 
-.tokyo-night {
-  --white: #c0caf5;
-  --black: #0d1221;
-  --green: #4fd6be;
-  --red: #c53b53;
-  --blue: #7dcfff;
-  --yellow: #ffc777;
-  --orange: #ff757f;
-  --purple: #bb9af7;
-  --dgreen: #c3e88d;
-  --dblue: #7aa2f7;
+.nord {
+  --white:  #d8dee9;
+  --black:  #2e3440 ;
+  --green: #88c0d0;
+  --blue:  #5e81ac;
+  --red:   #bf616a ;
+  --yellow:  #ebcb8b;
+  --orange:  #d08770;
+  --purple: #b4befe;
+  --dgreen: #a3be8c;
+  --dblue:  #81a1c1 ;
 }

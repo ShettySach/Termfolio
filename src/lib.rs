@@ -12,18 +12,15 @@ pub enum Command {
 }
 
 impl Command {
-    fn from(inp: &str) -> Self {
-        let inp = inp.trim();
-        let inp = inp.split_once(' ').unwrap_or((inp, " "));
-
-        match inp.0 {
+    fn from(inp0: &str, inp1: &str) -> Self {
+        match inp0 {
             "help" | "h" | "termfolio" => Self::Help,
             "about" | "a" => Self::About,
             "github" | "g" | "neofetch" => Self::Github,
             "repos" | "r" | "projects" => Self::Repos,
             "links" | "l" | "contacts" => Self::Links,
             "credits" | "c" => Self::Credits,
-            _ => Command::Bash(Bash::from(inp.0, inp.1)),
+            _ => Command::Bash(Bash::from(inp0, inp1)),
         }
     }
 
@@ -39,8 +36,8 @@ impl Command {
         }
     }
 
-    pub async fn process(inp: &str) -> String {
-        let command = Self::from(inp);
+    pub async fn process(inp0: &str, inp1: &str) -> String {
+        let command = Self::from(inp0, inp1);
         Self::printout(&command).await
     }
 }
