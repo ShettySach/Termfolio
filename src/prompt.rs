@@ -88,6 +88,9 @@ pub fn Prompt(
                 *prompts += 1;
             });
         });
+
+        form_element().unwrap().set_inert(true);
+        input_element().unwrap().set_inert(true);
     };
 
     create_effect(move |_| {
@@ -143,10 +146,12 @@ pub fn Prompt(
 
     view! {
         <form
+            id="prompt-form"
             on:submit=on_submit node_ref=form_element>
             <p class="inline">"user@termfolio:~$ "</p>
             <input
-                type="text" maxlength=42 spellcheck="false"
+                id="prompt-form"
+                class="inp" type="text" maxlength=42 spellcheck="false"
                 value=out node_ref=input_element/>
         </form>
         <pre>

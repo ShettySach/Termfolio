@@ -43,23 +43,23 @@ pub fn format_about(about: About) -> String {
         r#"<center class="grn semibold">{}</center>
 {}
 
-<u class="rd semibold">Interests</u> -
+<u class="rd semibold">Interests</u>
 
 {}
 
-<u class="rd semibold">Languages</u> -
+<u class="rd semibold">Languages</u>
 
 {}
 
-<u class="rd semibold">Experience</u> -
+<u class="rd semibold">Experience</u>
 
 {}
 
-<u class="rd semibold">Education</u> -
+<u class="rd semibold">Education</u>
 
 {}
 "#,
-        about.name,
+        about.name.to_uppercase(),
         about.intro,
         about
             .interests
@@ -77,7 +77,7 @@ pub fn format_about(about: About) -> String {
 
 
 <div class="row" style="display: flex; flex-direction: row; align-items: center; justify-content: center;"> 
-<div class="acols"">{}</div>
+<div class="acols">{}</div>
 </div>
 "#,
         text

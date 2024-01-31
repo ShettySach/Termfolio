@@ -34,7 +34,7 @@ form {
   display: inline-block;
   margin-right: 10px;
   margin-bottom: 0px;
-  caret-shape: block;
+  /* caret-shape: block; */
   caret-color: var(--green);
   font-weight: 500;
 }
@@ -83,7 +83,7 @@ form {
 
 .acols {
   flex: 0 0 calc(60%);
-  outline-offset: 15px;
+  outline-offset: 25px;
   outline: solid;
   outline-color: var(--green);
 }
