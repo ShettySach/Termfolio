@@ -98,3 +98,21 @@ impl Bash {
         }
     }
 }
+
+pub fn autocomplete(inp: &str) -> &str {
+    let inp = inp.trim();
+
+    let comms = [
+        "help", "about", "github", "repos", "links", "theme", "credits",
+    ];
+
+    if !inp.is_empty() {
+        for &c in comms.iter() {
+            if c.starts_with(inp) {
+                return c;
+            }
+        }
+    }
+
+    inp
+}

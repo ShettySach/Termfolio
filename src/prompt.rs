@@ -9,6 +9,7 @@ use leptos_use::{
     UseColorModeOptions, UseColorModeReturn, UseCycleListOptions, UseCycleListReturn,
 };
 use std::collections::VecDeque;
+use termfolio::autocomplete;
 
 #[component]
 pub fn Prompt(
@@ -74,7 +75,7 @@ pub fn Prompt(
             }
 
             updater.update(|hist| {
-                if value != "" {
+                if value != "" && hist.front() != Some(&value) {
                     let value = value.replace("<", "‹").replace(">", "›");
                     hist.push_front(value);
                     if hist.len() > 20 {
@@ -103,12 +104,14 @@ pub fn Prompt(
         let inp = input_element.get_untracked().unwrap();
 
         match &ev.key()[..] {
+            //Previous command in history
             "ArrowUp" => {
                 if index < hist.len() {
                     inp.set_value(&hist[index]);
                     set_history_index.update(|history_index| *history_index += 1);
                 }
             }
+            //Next command in history
             "ArrowDown" => {
                 if index > 1 {
                     inp.set_value(&hist[index - 2]);
@@ -118,7 +121,23 @@ pub fn Prompt(
                     set_history_index.update(|history_index| *history_index -= 1);
                 }
             }
+            //Autocomplete
+            "Tab" => {
+                ev.prevent_default();
+                inp.set_value(autocomplete(&inp.value()));
+            }
             _ => {}
+        }
+
+        //Clear
+        if ev.ctrl_key() && ev.key() == "l" {
+            ev.prevent_default();
+            submitter.update(|prompts| {
+                *prompts = 0;
+            });
+            submitter.update(|prompts| {
+                *prompts += 1;
+            });
         }
     });
 
