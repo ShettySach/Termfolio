@@ -22,7 +22,10 @@ fn Base() -> impl IntoView {
                 key = |&prompt| prompt
                 children = move |_| {
                     view! {
-                        <Prompt submitter=set_prompts updater=set_history history=history/>
+                        <Prompt
+                            submitter=set_prompts
+                            updater=set_history
+                            history=history/>
                     }
                 }
             />

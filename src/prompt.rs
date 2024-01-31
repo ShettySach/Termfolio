@@ -130,7 +130,7 @@ pub fn Prompt(
         }
 
         //Clear
-        if ev.ctrl_key() && ev.key() == "l" {
+        if (ev.ctrl_key() || ev.meta_key()) && (ev.key() == "l" || ev.key() == "L") {
             ev.prevent_default();
             submitter.update(|prompts| {
                 *prompts = 0;
@@ -145,7 +145,9 @@ pub fn Prompt(
         <form
             on:submit=on_submit node_ref=form_element>
             <p class="inline">"user@termfolio:~$ "</p>
-            <input type="text" maxlength=42 value=out node_ref=input_element/>
+            <input
+                type="text" maxlength=42 spellcheck="false"
+                value=out node_ref=input_element/>
         </form>
         <pre>
             <div class="output" inner_html={out}></div>

@@ -14,12 +14,12 @@ pub enum Command {
 impl Command {
     fn from(inp0: &str, inp1: &str) -> Self {
         match inp0 {
-            "help" | "h" | "termfolio" => Self::Help,
-            "about" | "a" => Self::About,
-            "github" | "g" | "neofetch" => Self::Github,
-            "repos" | "r" | "projects" => Self::Repos,
-            "links" | "l" | "contacts" => Self::Links,
-            "credits" | "c" => Self::Credits,
+            "help" | "termfolio" => Self::Help,
+            "about" => Self::About,
+            "github" | "neofetch" => Self::Github,
+            "repos" | "projects" => Self::Repos,
+            "links" => Self::Links,
+            "credits" => Self::Credits,
             _ => Command::Bash(Bash::from(inp0, inp1)),
         }
     }
@@ -106,11 +106,9 @@ pub fn autocomplete(inp: &str) -> &str {
         "help", "about", "github", "repos", "links", "theme", "credits",
     ];
 
-    if !inp.is_empty() {
-        for &c in comms.iter() {
-            if c.starts_with(inp) {
-                return c;
-            }
+    for &c in comms.iter() {
+        if c.starts_with(inp) {
+            return c;
         }
     }
 
