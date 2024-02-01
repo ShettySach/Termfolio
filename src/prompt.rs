@@ -25,13 +25,13 @@ pub fn Prompt(
 
     let UseColorModeReturn { mode, set_mode, .. } = use_color_mode_with_options(
         UseColorModeOptions::default()
-            .custom_modes(vec!["catpuccin".into(), "nord".into(), "classic".into()])
+            .custom_modes(vec!["catppuccin".into(), "nord".into(), "classic".into()])
             .initial_value(ColorMode::from("tokyo-night")),
     );
 
     let UseCycleListReturn { state, next, .. } = use_cycle_list_with_options(
         vec![
-            ColorMode::Custom("catpuccin".into()),
+            ColorMode::Custom("catppuccin".into()),
             ColorMode::Custom("nord".into()),
             ColorMode::Custom("classic".into()),
             ColorMode::Custom("tokyo-night".into()),
@@ -109,6 +109,7 @@ pub fn Prompt(
         match &ev.key()[..] {
             //Previous command in history
             "ArrowUp" => {
+                ev.prevent_default();
                 if index < hist.len() {
                     inp.set_value(&hist[index]);
                     set_history_index.update(|history_index| *history_index += 1);

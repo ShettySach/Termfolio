@@ -84,7 +84,7 @@ impl Bash {
             Self::Go => String::from("Nowhere to go."),
             Self::Create => String::from("Nowhere to create."),
             Self::Destroy => String::from("Nothing to destroy."),
-            Self::Duplicate => String::from("Nowhere to duplicate."),
+            Self::Duplicate => String::from("Nothing to duplicate."),
             Self::Move => String::from("Nowhere to move."),
             Self::Show => String::from("Nothing to see."),
             Self::Search => String::from("Nowhere to search."),
@@ -106,9 +106,11 @@ pub fn autocomplete(inp: &str) -> &str {
         "help", "about", "github", "repos", "links", "theme", "credits",
     ];
 
-    for &c in comms.iter() {
-        if c.starts_with(inp) {
-            return c;
+    if !inp.is_empty() {
+        for &c in comms.iter() {
+            if c.starts_with(inp) {
+                return c;
+            }
         }
     }
 

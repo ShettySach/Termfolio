@@ -1,17 +1,4 @@
-.classic {
-  --white: White;
-  --black: Black;
-  --green: LimeGreen;
-  --red: Crimson;
-  --blue: DeepSkyBlue;
-  --yellow: Gold;
-  --orange: OrangeRed;
-  --purple: MediumSlateBlue;
-  --dgreen: MediumSeaGreen;
-  --dblue: DodgerBlue;
-}
-
-.catpuccin {
+.catppuccin {
   --white: #f5e0dc;
   --black: #181825;
   --green: #cba6f7;
@@ -35,4 +22,17 @@
   --purple: #b4befe;
   --dgreen: #a3be8c;
   --dblue: #81a1c1;
+}
+
+.classic {
+  --white: White;
+  --black: Black;
+  --green: LimeGreen;
+  --red: Crimson;
+  --blue: DeepSkyBlue;
+  --yellow: Gold;
+  --orange: OrangeRed;
+  --purple: MediumSlateBlue;
+  --dgreen: MediumSeaGreen;
+  --dblue: DodgerBlue;
 }

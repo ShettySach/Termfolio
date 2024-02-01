@@ -83,9 +83,8 @@ form {
 
 .acols {
   flex: 0 0 calc(60%);
+  outline: 3.5px solid var(--green);
   outline-offset: 25px;
-  outline: solid;
-  outline-color: var(--green);
 }
 
 /* Github fetch */
