@@ -56,7 +56,7 @@ pub enum Bash {
     You,
     Echo(String),
     Nothing,
-    Invalid,
+    Invalid(String),
 }
 
 impl Bash {
@@ -75,7 +75,7 @@ impl Bash {
             "whoami" => Self::You,
             "echo" => Self::Echo(String::from(inp1)),
             "" => Self::Nothing,
-            _ => Self::Invalid,
+            _ => Self::Invalid(String::from(inp0)),
         }
     }
 
@@ -92,9 +92,9 @@ impl Bash {
             Self::Edit => String::from("Nothing to change."),
             Self::Power => String::from("With great power comes great responsibility."),
             Self::You => String::from("Despite everything, it's still you."),
-            Self::Echo(s) => String::from(s).replace("<", "‹").replace(">", "›"),
+            Self::Echo(s) => String::from(s),
             Self::Nothing => String::new(),
-            _ => String::from("Command not found..."),
+            Self::Invalid(s) => format!("{s}: command not found",),
         }
     }
 }

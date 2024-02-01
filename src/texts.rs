@@ -31,9 +31,18 @@ Made by <span class="rd semibold">Sachith C Shetty</span>
   <a href="https://github.com/shettysach/termfolio" target="_blank" class="blu semibold">Repo</a>: github.com/shettysach/termfolio
 
 <span class="rd semibold">APIs used -</span>
-* Github API
-* <a href="https://github.com/Ysn4Irix/gh-pinned-repos-api" target="_blank" class="blu semibold">Pinned repos</a> - Ysn4Irix/gh-pinned-repos-api
-* <a href="https://github.com/idealclover/GitHub-Star-Counter" target="_blank" class="blu semibold">Total stars and forks</a> - idealclover/GitHub-Star-Counter"#;
+* <a 
+    href="https://docs.github.com/en/rest/about-the-rest-api"
+    target="_blank"
+    class="blu semibold">Github REST API</a>
+* <a 
+    href="https://github.com/Ysn4Irix/gh-pinned-repos-api"
+    target="_blank" 
+    class="blu semibold">Pinned repos</a> - Ysn4Irix/gh-pinned-repos-api
+* <a 
+    href="https://github.com/idealclover/GitHub-Star-Counter"
+    target="_blank"
+    class="blu semibold">Total stars and forks</a> - idealclover/GitHub-Star-Counter"#;
 
 pub const READ_JSON_ERROR: &str = r#"<span class="rd semibold">Error reading config.json</span>"#;
 pub const FETCH_GITHUB_ERROR: &str =

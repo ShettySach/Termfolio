@@ -61,6 +61,7 @@ form {
 
 .inline {
   display: inline;
+  font-weight: 500;
   color: var(--green);
 }
 
@@ -119,7 +120,8 @@ form {
   font-size: 35px;
 }
 
+/* Links */
+
 a {
-  text-decoration-thickness: 1px;
-  font-weight: 500;
+  text-decoration-thickness: 2px;
 }

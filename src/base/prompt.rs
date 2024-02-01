@@ -17,12 +17,15 @@ pub fn Prompt(
     updater: WriteSignal<VecDeque<String>>,
     history: ReadSignal<VecDeque<String>>,
 ) -> impl IntoView {
+    //Output and history index signals
     let (out, set_out) = create_signal(String::new());
     let (history_index, set_history_index) = create_signal(0);
 
-    let input_element: NodeRef<Input> = create_node_ref();
+    //Form and input elements
     let form_element: NodeRef<Form> = create_node_ref();
+    let input_element: NodeRef<Input> = create_node_ref();
 
+    //Themes
     let UseColorModeReturn { mode, set_mode, .. } = use_color_mode_with_options(
         UseColorModeOptions::default()
             .custom_modes(vec!["catppuccin".into(), "nord".into(), "classic".into()])
@@ -39,14 +42,15 @@ pub fn Prompt(
         UseCycleListOptions::default().initial_value(Some((mode, set_mode).into())),
     );
 
+    //On submit
     let on_submit = move |ev: SubmitEvent| {
         ev.prevent_default();
         let value = input_element().unwrap().value();
         let next = next.clone();
 
         spawn_local(async move {
-            let val = value.trim();
-            let val = val.split_once(' ').unwrap_or((val, " "));
+            let value = value.trim().replace("<", "‹").replace(">", "›");
+            let val = value.split_once(' ').unwrap_or((&value, " "));
 
             match val.0 {
                 "clear" => {
@@ -76,7 +80,6 @@ pub fn Prompt(
 
             updater.update(|hist| {
                 if value != "" && hist.front() != Some(&value) {
-                    let value = value.replace("<", "‹").replace(">", "›");
                     hist.push_front(value);
                     if hist.len() > 20 {
                         hist.pop_back();
@@ -93,6 +96,7 @@ pub fn Prompt(
         input_element().unwrap().set_inert(true);
     };
 
+    // Focus on the new prompt on mount
     create_effect(move |_| {
         if let Some(ref_input) = input_element.get() {
             let _ = ref_input.on_mount(|input| {
@@ -101,6 +105,7 @@ pub fn Prompt(
         }
     });
 
+    // Event listener for Up and Down arrow keys, Tab and Ctrl/Command + L
     let _ = use_event_listener(input_element, keydown, move |ev: KeyboardEvent| {
         let index = history_index.get_untracked();
         let hist = history.get_untracked();
