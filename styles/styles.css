@@ -32,7 +32,6 @@ input {
 
 form {
   display: inline-block;
-  margin-right: 10px;
   margin-bottom: 0px;
   /* caret-shape: block; */
   caret-color: var(--green);
@@ -123,5 +122,5 @@ form {
 /* Links */
 
 a {
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1px;
 }

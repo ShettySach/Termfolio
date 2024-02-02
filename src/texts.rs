@@ -1,18 +1,10 @@
-pub const LOGO_V1: &str = r#"<span class="grn"> dMMMMMMP dMMMMMP dMMMMb  dMMMMMMMMb  dMMMMMP .aMMMb  dMP     dMP .aMMMb 
-   dMP   dMP     dMP.dMP dMP"dMP"dMP dMP     dMP"dMP dMP     amr dMP"dMP 
-  dMP   dMMMP   dMMMMK  dMP dMP dMP dMMMP   dMP dMP dMP     dMP dMP dMP  
- dMP   dMP     dMP"AMF dMP dMP dMP dMP     dMP.aMP dMP     dMP dMP.aMP   
-dMP   dMMMMMP dMP dMP dMP dMP dMP dMP      VMMMP" dMMMMMP dMP  VMMMP"    
-</span>"#;
-
-pub const LOGO_V2: &str = r#"<span class="grn semibold">  ________________  __  _____________  __    ________ 
+pub const HELP: &str = r#"<span class="grn semibold">  ________________  __  _____________  __    ________ 
  /_  __/ ____/ __ \/  |/  / ____/ __ \/ /   /  _/ __ \
   / / / __/ / /_/ / /|_/ / /_  / / / / /    / // / / /
  / / / /___/ _, _/ /  / / __/ / /_/ / /____/ // /_/ / 
 /_/ /_____/_/ |_/_/  /_/_/    \____/_____/___/\____/  
-</span>"#;
+</span>
 
-pub const HELP: &str = r#"
 Hello, welcome to <u class="blu semibold">Termfolio</u>. Type one of these commands -
 
   <span class="rd semibold">about</span> - View about me
@@ -23,7 +15,14 @@ Hello, welcome to <u class="blu semibold">Termfolio</u>. Type one of these comma
   <span class="rd semibold">theme</span> - Cycle through themes
   <span class="rd semibold">credits</span> - View credits and repo"#;
 
-pub const CREDITS: &str = r#"
+pub const CREDITS: &str = r#"<span class="grn"> _____ ______________  _________ _____ _     _____ _____ 
+|_   _|  ___| ___ \  \/  ||  ___|  _  | |   |_   _|  _  |
+  | | | |__ | |_/ / .  . || |_  | | | | |     | | | | | |
+  | | |  __||    /| |\/| ||  _| | | | | |     | | | | | |
+  | | | |___| |\ \| |  | || |   \ \_/ / |_____| |_\ \_/ /
+  \_/ \____/\_| \_\_|  |_/\_|    \___/\_____/\___/ \___/ 
+</span>
+
 Terminal style portfolio website, made using Rust.
 Made by <span class="rd semibold">Sachith C Shetty</span> 
   

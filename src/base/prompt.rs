@@ -9,7 +9,6 @@ use leptos_use::{
     UseColorModeOptions, UseColorModeReturn, UseCycleListOptions, UseCycleListReturn,
 };
 use std::collections::VecDeque;
-use termfolio::autocomplete;
 
 #[component]
 pub fn Prompt(
@@ -50,7 +49,7 @@ pub fn Prompt(
 
         spawn_local(async move {
             let value = value.trim().replace("<", "‹").replace(">", "›");
-            let val = value.split_once(' ').unwrap_or((&value, " "));
+            let val = value.split_once(' ').unwrap_or((&value, ""));
 
             match val.0 {
                 "clear" => {
@@ -79,7 +78,7 @@ pub fn Prompt(
             }
 
             updater.update(|hist| {
-                if value != "" && hist.front() != Some(&value) {
+                if !value.is_empty() && hist.front() != Some(&value) {
                     hist.push_front(value);
                     if hist.len() > 20 {
                         hist.pop_back();
@@ -133,7 +132,7 @@ pub fn Prompt(
             //Autocomplete
             "Tab" => {
                 ev.prevent_default();
-                inp.set_value(autocomplete(&inp.value()));
+                inp.set_value(termfolio::autocomplete(&inp.value()));
             }
             _ => {}
         }

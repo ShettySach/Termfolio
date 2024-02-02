@@ -1,7 +1,9 @@
 use leptos::{component, create_signal, view, For, IntoView, SignalGet};
 use std::collections::VecDeque;
 
+mod banner;
 mod prompt;
+use banner::Banner;
 use prompt::Prompt;
 
 #[component]
@@ -14,6 +16,7 @@ pub fn Base() -> impl IntoView {
 
     view! {
         <div>
+            <Banner/>
             <For
                 each = prompt_list
                 key = |&prompt| prompt

@@ -26,12 +26,12 @@ impl Command {
 
     async fn printout(&self) -> String {
         match self {
-            Self::Help => format!("{}{}", texts::LOGO_V2, texts::HELP),
+            Self::Help => String::from(texts::HELP),
             Self::About => fetch::get_about(),
             Self::Github => fetch::get_github().await,
             Self::Repos => fetch::get_repos().await,
             Self::Links => fetch::get_contacts().to_string(),
-            Self::Credits => format!("{}{}", texts::LOGO_V1, texts::CREDITS),
+            Self::Credits => String::from(texts::CREDITS),
             Self::Bash(bash) => Bash::printout(&bash),
         }
     }
@@ -103,7 +103,7 @@ pub fn autocomplete(inp: &str) -> &str {
     let inp = inp.trim();
 
     let comms = [
-        "help", "about", "github", "repos", "links", "theme", "credits",
+        "help", "about", "github", "repos", "links", "theme", "credits", "neofetch",
     ];
 
     if !inp.is_empty() {
