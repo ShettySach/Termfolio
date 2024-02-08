@@ -150,6 +150,7 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
         .map(|repo| {
             let text = format!(
                 r#"<a href="{}" target="_blank" class="blu semibold">{}</a>
+
 <span class="rd semibold">Description:</span> {}
 <span class="rd semibold">Language:</span> <span style="color:{}">{}</span>
 <span class="rd semibold">Stars:</span> <span class="ylw">{}</span>
@@ -168,7 +169,7 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
             format!(
                 r#"<div class="row">
 <div class="rcols">{}</div>
-<div class="rcols">{}</div>
+<div class="rcols" style="max-width: 50%;">{}</div>
 </div>"#,
                 lang_icon(&repo.language.name),
                 text
@@ -178,6 +179,7 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
 
     let all_link = format!(
         r#"<a href="https://www.github.com/{}?tab=repositories" target="_blank" class="blu semibold">All repos</a>
+
 <span class="rd semibold">Description:</span> All my Github repositories."#,
         username
     );
@@ -185,7 +187,7 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
     let all = format!(
         r#"<div class="row">
 <div class="rcols">{}</div>
-<div class="rcols">{}</div>
+<div class="rcols" style="max-width: 50%;">{}</div>
 </div>"#,
         PLACEHOLDER, all_link
     );
@@ -195,9 +197,7 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
 
 pub fn format_contacts(config: Config) -> String {
     let github = format!(
-        r#"Links -
-
-  <a href="https://github.com/{}" target="_blank" style="color:var(--purple);font-weight:500;">Github</a>: github.com/{}"#,
+        r#"  <a href="https://github.com/{}" target="_blank" style="color:var(--purple);font-weight:500;">Github</a>: github.com/{}"#,
         config.github, config.github
     );
 
@@ -213,6 +213,7 @@ pub fn format_contacts(config: Config) -> String {
                     format!(
             r#"
   <a href="https://www.linkedin.com/{}" target="_blank" style="color:var(--dblue);font-weight:500;">LinkedIn</a>: linkedin.com/{}"#,
+  
             linkedin, linkedin
                     )
                 });
@@ -226,7 +227,7 @@ pub fn format_contacts(config: Config) -> String {
                 });
 
     format!(
-        "{}{}{}{}",
+        "{}\n{}\n{}\n{}",
         github,
         email.unwrap_or_default(),
         linkedin.unwrap_or_default(),

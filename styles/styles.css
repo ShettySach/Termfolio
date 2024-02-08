@@ -93,7 +93,6 @@ form {
 /* Repos fetch */
 
 .rcols {
-  max-width: 50%;
   flex: 0 0 calc(50% - 35px);
   margin: 50px;
 }
@@ -118,5 +117,6 @@ form {
 /* Links */
 
 a {
-  text-decoration-thickness: 1px;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 8px;
 }
