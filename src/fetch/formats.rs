@@ -2,7 +2,10 @@ use crate::fetch::{About, Config, Repository, UserInfo, UserStats};
 use std::collections::HashMap;
 
 const IMG_G: &str = include_str!("../../configs/img_g.txt");
-const IMG_R: &str = include_str!("../../configs/img_r.txt");
+const RUST: &str = include_str!("../../configs/lang_icons/ferris.txt");
+const PYTHON: &str = include_str!("../../configs/lang_icons/pythons.txt");
+const JAVASCRIPT: &str = include_str!("../../configs/lang_icons/javascript.txt");
+const PLACEHOLDER: &str = include_str!("../../configs/lang_icons/octocat.txt");
 
 pub fn format_about(about: About) -> String {
     let exp_string: String = about
@@ -167,7 +170,8 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
 <div class="rcols">{}</div>
 <div class="rcols">{}</div>
 </div>"#,
-                IMG_R, text
+                lang_icon(&repo.language.name),
+                text
             )
         })
         .collect();
@@ -183,7 +187,7 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
 <div class="rcols">{}</div>
 <div class="rcols">{}</div>
 </div>"#,
-        IMG_R, all_link
+        PLACEHOLDER, all_link
     );
 
     format!("{}\n{}", res.join("\n"), all)
@@ -257,6 +261,15 @@ pub fn format_langs(langs: Vec<String>) -> String {
         .collect();
 
     formatted_langs.join(" ")
+}
+
+fn lang_icon(lang: &str) -> &str {
+    match lang {
+        "Rust" => RUST,
+        "Python" | "Jupyter Notebook" => PYTHON,
+        "CSS" | "HTML" | "JavaScript" => JAVASCRIPT,
+        _ => PLACEHOLDER,
+    }
 }
 
 const BLOCKS: &str = r#"<span class="blocks" style="color:var(--black)">█</span><span class="rd blocks">█</span><span class="grn blocks">█</span><span class="ylw blocks">█</span><span class="blu blocks">█</span><span class="blocks" style="color:var(--orange)">█</span><span class="blocks" style="color:var(--purple)">█</span><span class="blocks">█</span>"#;
