@@ -213,7 +213,6 @@ pub fn format_contacts(config: Config) -> String {
                     format!(
             r#"
   <a href="https://www.linkedin.com/{}" target="_blank" style="color:var(--dblue);font-weight:500;">LinkedIn</a>: linkedin.com/{}"#,
-  
             linkedin, linkedin
                     )
                 });
