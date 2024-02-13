@@ -6,7 +6,6 @@ pub const HELP: &str = r#"<span class="grn semibold">  ________________  __  ___
  / / / /___/ _, _/ /  / / __/ / /_/ / /____/ // /_/ / 
 /_/ /_____/_/ |_/_/  /_/_/    \____/_____/___/\____/  
 </span>
-
 Hello, welcome to <u class="blu semibold">Termfolio</u>. Type one of these commands -
 
   <span class="rd semibold">about</span> - View about me

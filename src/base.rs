@@ -12,7 +12,7 @@ pub fn Base() -> impl IntoView {
     let (prompts, set_prompts) = create_signal(1);
     let (history, set_history) = create_signal(VecDeque::new());
 
-    let prompt_list = move || (0..prompts.get()).collect::<Vec<u32>>();
+    let prompt_list = move || (0..prompts.get()).collect::<Vec<u8>>();
 
     view! {
         <div>

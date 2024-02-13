@@ -12,7 +12,7 @@ use std::collections::VecDeque;
 
 #[component]
 pub fn Prompt(
-    submitter: WriteSignal<u32>,
+    submitter: WriteSignal<u8>,
     updater: WriteSignal<VecDeque<String>>,
     history: ReadSignal<VecDeque<String>>,
 ) -> impl IntoView {
@@ -87,7 +87,9 @@ pub fn Prompt(
             });
 
             submitter.update(|prompts| {
-                *prompts += 1;
+                if *prompts < u8::MAX {
+                    *prompts += 1;
+                }
             });
         });
 

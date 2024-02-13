@@ -1,4 +1,4 @@
-use crate::fetch::{About, Config, Repository, UserInfo, UserStats};
+use crate::fetch::{About, Links, Repository, UserInfo, UserStats};
 use std::collections::HashMap;
 
 const IMG_G: &str = include_str!("../../configs/img_g.txt");
@@ -195,43 +195,43 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
     format!("{}\n{}", res.join("\n"), all)
 }
 
-pub fn format_contacts(config: Config) -> String {
-    let github = format!(
-        r#"  <a href="https://github.com/{}" target="_blank" style="color:var(--purple);font-weight:500;">Github</a>: github.com/{}"#,
-        config.github, config.github
+pub fn format_contacts(links: &Links) -> String {
+    let mut result = String::new();
+
+    result += &format!(
+        r#"  <a href="https://github.com/{}" target="_blank" class="semibold"  style="color:var(--purple);">Github</a>: github.com/{}
+"#,
+        links.github, links.github
     );
 
-    let email = config.links.email.map(|email| {
-        format!(
+    if let Some(email) = &links.email {
+        result += &format!(
             r#"
-  <a href="mailto:{}" target="_blank" style="color:var(--orange);font-weight:500;">Email</a>: {}"#,
+  <a href="mailto:{}" target="_blank" class="semibold" style="color:var(--orange);">Email</a>: {}
+  "#,
             email, email
-        )
-    });
+        );
+    }
 
-    let linkedin = config.links.linkedin.map(|linkedin| {
-                    format!(
+    if let Some(linkedin) = &links.linkedin {
+        result += &format!(
             r#"
-  <a href="https://www.linkedin.com/{}" target="_blank" style="color:var(--dblue);font-weight:500;">LinkedIn</a>: linkedin.com/{}"#,
+  <a href="https://www.linkedin.com/{}" target="_blank" class="semibold" style="color:var(--dblue);">LinkedIn</a>: linkedin.com/{}
+  "#,
             linkedin, linkedin
-                    )
-                });
+        );
+    }
 
-    let twitter = config.links.twitter.map(|twitter| {
-                    format!(
+    if let Some(twitter) = &links.twitter {
+        result += &format!(
             r#"
-  <a href="https://www.twitter.com/{}" target="_blank" style="color:(--blue);font-weight:500;">Twitter/X</a>: @{}"#,
+  <a href="https://www.twitter.com/{}" target="_blank" class="blu semibold">Twitter/X</a>: @{}
+  "#,
             twitter, twitter
-                    )
-                });
+        );
+    }
 
-    format!(
-        "{}\n{}\n{}\n{}",
-        github,
-        email.unwrap_or_default(),
-        linkedin.unwrap_or_default(),
-        twitter.unwrap_or_default()
-    )
+    result
 }
 
 pub fn format_langs(langs: Vec<String>) -> String {

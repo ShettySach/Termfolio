@@ -3,12 +3,12 @@
   --black: #181825;
   --green: #cba6f7;
   --red: #e78284;
-  --blue: #74c7ec;
+  --blue: #89b4fa;
   --yellow: #f9e2af;
   --orange: #fab387;
   --purple: #b4befe;
   --dgreen: #94e2d5;
-  --dblue: #89b4fa;
+  --dblue: #74c7ec;
 }
 
 .nord {
@@ -29,10 +29,10 @@
   --black: Black;
   --green: LimeGreen;
   --red: Crimson;
-  --blue: DeepSkyBlue;
+  --blue: DodgerBlue;
   --yellow: Gold;
   --orange: OrangeRed;
   --purple: MediumSlateBlue;
   --dgreen: MediumSeaGreen;
-  --dblue: DodgerBlue;
+  --dblue: DeepSkyBlue;
 }

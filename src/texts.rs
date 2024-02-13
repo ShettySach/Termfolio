@@ -22,7 +22,6 @@ pub const CREDITS: &str = r#"<span class="grn"> _____ ______________  _________ 
   | | | |___| |\ \| |  | || |   \ \_/ / |_____| |_\ \_/ /
   \_/ \____/\_| \_\_|  |_/\_|    \___/\_____/\___/ \___/ 
 </span>
-
 Terminal style portfolio website, made using Rust.
 Made by <span class="rd semibold">Sachith C Shetty</span> 
   

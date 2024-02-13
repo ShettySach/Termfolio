@@ -51,6 +51,7 @@ pub struct Education {
 
 #[derive(Deserialize, Serialize, Clone)]
 pub struct Links {
+    pub github: String,
     pub email: Option<String>,
     pub linkedin: Option<String>,
     pub twitter: Option<String>,
@@ -60,18 +61,18 @@ pub struct Links {
 pub struct UserInfo {
     pub name: Option<String>,
     pub bio: Option<String>,
-    pub public_repos: u32,
+    pub public_repos: u16,
     pub company: Option<String>,
     pub location: Option<String>,
-    pub followers: u32,
-    pub following: u32,
+    pub followers: u16,
+    pub following: u16,
     pub created_at: String,
 }
 
 #[derive(Deserialize, Serialize, Clone)]
 pub struct UserStats {
-    pub stars: u32,
-    pub forks: u32,
+    pub stars: u16,
+    pub forks: u16,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -85,8 +86,8 @@ pub struct Repository {
     pub repo: String,
     pub description: String,
     pub language: Language,
-    pub stars: u32,
-    pub forks: u32,
+    pub stars: u16,
+    pub forks: u16,
 }
 
 #[derive(Deserialize, Serialize, Clone)]
@@ -133,7 +134,7 @@ pub async fn get_repos() -> String {
 
 pub fn get_contacts() -> &'static String {
     CONTACTS.get_or_init(|| match read_config() {
-        Some(config) => format_contacts(config),
+        Some(config) => format_contacts(&config.links),
         _ => String::from(READ_JSON_ERROR),
     })
 }
