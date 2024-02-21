@@ -58,11 +58,20 @@ pub fn Prompt(
     //On submit
     let on_submit = move |ev: SubmitEvent| {
         ev.prevent_default();
-        let value = input_element().unwrap().value();
+        let input_value = input_element().unwrap().value();
         let next = next.clone();
 
         spawn_local(async move {
-            general_commands(value, state, next, set_out, submitter, updater, history).await
+            general_commands(
+                input_value,
+                state,
+                next,
+                set_out,
+                submitter,
+                updater,
+                history,
+            )
+            .await
         });
 
         form_element().unwrap().set_inert(true);

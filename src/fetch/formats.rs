@@ -1,7 +1,7 @@
 use crate::fetch::{About, Links, Repository, UserInfo, UserStats};
 use std::collections::HashMap;
 
-const IMG_G: &str = include_str!("../../configs/img_g.txt");
+const NEOFETCH: &str = include_str!("../../configs/neofetch.txt");
 const RUST: &str = include_str!("../../configs/lang_icons/ferris.txt");
 const PYTHON: &str = include_str!("../../configs/lang_icons/pythons.txt");
 const JAVASCRIPT: &str = include_str!("../../configs/lang_icons/javascript.txt");
@@ -140,7 +140,7 @@ pub fn format_github(
 <div class="gcols">{}</div>
 <div class="gcols">{}</div>
 </div>"#,
-        IMG_G, text
+        NEOFETCH, text
     )
 }
 
