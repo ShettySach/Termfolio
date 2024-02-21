@@ -7,7 +7,7 @@
 
     "interests": ["Artificial Intelligence", "Machine Learning", "LLMs", "Linux", "Embedded Systems", "Wasm (Web Assembly)", "APIs", "CLIs / TUIs"],
 
-    "langs": ["Rust", "Python", "C++", "Bash"],
+    "langs": ["Rust", "Python", "C++", "Bash", "Dart"],
 
     "experience": [
       {

@@ -244,6 +244,7 @@ pub fn format_langs(langs: Vec<String>) -> String {
         ("Haskell", "purple"),
         ("Zig", "orange"),
         ("Go", "blue"),
+        ("Dart", "dblue"),
         ("JavaScript", "yellow"),
         ("TypeScript", "blue"),
         ("Bash", "dgreen"),

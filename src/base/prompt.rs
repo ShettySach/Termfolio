@@ -4,16 +4,14 @@ use leptos::{
     component, create_effect, create_node_ref, create_signal, spawn_local, view, IntoView, NodeRef,
     ReadSignal, WriteSignal,
 };
-use leptos_use::{
-    use_color_mode_with_options, use_cycle_list_with_options, ColorMode, UseColorModeOptions,
-    UseColorModeReturn, UseCycleListOptions, UseCycleListReturn,
-};
 use std::collections::VecDeque;
 
 mod general;
 use general::general_commands;
 mod keyboard;
 use keyboard::keyboard_commands;
+mod themes;
+use themes::theme_changer;
 
 #[component]
 pub fn Prompt(
@@ -38,22 +36,8 @@ pub fn Prompt(
         }
     });
 
-    //Themes
-    let UseColorModeReturn { mode, set_mode, .. } = use_color_mode_with_options(
-        UseColorModeOptions::default()
-            .custom_modes(vec!["catppuccin".into(), "nord".into(), "classic".into()])
-            .initial_value(ColorMode::from("tokyo-night")),
-    );
-
-    let UseCycleListReturn { state, next, .. } = use_cycle_list_with_options(
-        vec![
-            ColorMode::Custom("catppuccin".into()),
-            ColorMode::Custom("nord".into()),
-            ColorMode::Custom("classic".into()),
-            ColorMode::Custom("tokyo-night".into()),
-        ],
-        UseCycleListOptions::default().initial_value(Some((mode, set_mode).into())),
-    );
+    //Theme changer
+    let (state, next) = theme_changer();
 
     //On submit
     let on_submit = move |ev: SubmitEvent| {
