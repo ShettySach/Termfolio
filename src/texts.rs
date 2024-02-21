@@ -22,21 +22,25 @@ pub const CREDITS: &str = r#"<span class="grn"> _____ ______________  _________ 
   | | | |___| |\ \| |  | || |   \ \_/ / |_____| |_\ \_/ /
   \_/ \____/\_| \_\_|  |_/\_|    \___/\_____/\___/ \___/ 
 </span>
-Terminal style portfolio website, made using Rust.
+Terminal style portfolio website, made in Leptos, Rust.
 Made by <span class="rd semibold">Sachith C Shetty</span> 
   
   <a href="https://github.com/shettysach" target="_blank" class="blu semibold">Github</a>: github.com/shettysach
+
   <a href="https://github.com/shettysach/termfolio" target="_blank" class="blu semibold">Repo</a>: github.com/shettysach/termfolio
 
 <span class="rd semibold">APIs used -</span>
+
 * <a 
     href="https://docs.github.com/en/rest/about-the-rest-api"
     target="_blank"
     class="blu semibold">Github REST API</a>
+
 * <a 
     href="https://github.com/Ysn4Irix/gh-pinned-repos-api"
     target="_blank" 
     class="blu semibold">Pinned repos</a> - Ysn4Irix/gh-pinned-repos-api
+
 * <a 
     href="https://github.com/idealclover/GitHub-Star-Counter"
     target="_blank"

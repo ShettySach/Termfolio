@@ -1,14 +1,19 @@
-use leptos::ev::{keydown, KeyboardEvent, SubmitEvent};
+use leptos::ev::SubmitEvent;
 use leptos::html::{Form, Input};
 use leptos::{
     component, create_effect, create_node_ref, create_signal, spawn_local, view, IntoView, NodeRef,
-    ReadSignal, SignalGetUntracked, SignalUpdate, WriteSignal,
+    ReadSignal, WriteSignal,
 };
 use leptos_use::{
-    use_color_mode_with_options, use_cycle_list_with_options, use_event_listener, ColorMode,
-    UseColorModeOptions, UseColorModeReturn, UseCycleListOptions, UseCycleListReturn,
+    use_color_mode_with_options, use_cycle_list_with_options, ColorMode, UseColorModeOptions,
+    UseColorModeReturn, UseCycleListOptions, UseCycleListReturn,
 };
 use std::collections::VecDeque;
+
+mod general;
+use general::general_commands;
+mod keyboard;
+use keyboard::keyboard_commands;
 
 #[component]
 pub fn Prompt(
@@ -18,11 +23,20 @@ pub fn Prompt(
 ) -> impl IntoView {
     //Output and history index signals
     let (out, set_out) = create_signal(String::new());
-    let (history_index, set_history_index) = create_signal(0);
+    let (history_index, set_history_index): (ReadSignal<u8>, WriteSignal<u8>) = create_signal(0);
 
     //Form and input elements
     let form_element: NodeRef<Form> = create_node_ref();
     let input_element: NodeRef<Input> = create_node_ref();
+
+    // Focus on the new prompt on mount
+    create_effect(move |_| {
+        if let Some(ref_input) = input_element.get() {
+            let _ = ref_input.on_mount(|input| {
+                let _ = input.focus();
+            });
+        }
+    });
 
     //Themes
     let UseColorModeReturn { mode, set_mode, .. } = use_color_mode_with_options(
@@ -48,108 +62,21 @@ pub fn Prompt(
         let next = next.clone();
 
         spawn_local(async move {
-            let value = value.trim().replace("<", "‹").replace(">", "›");
-            let val = value.split_once(' ').unwrap_or((&value, ""));
-
-            match val.0 {
-                "clear" => {
-                    submitter.update(|prompts| {
-                        *prompts = 0;
-                    });
-                }
-                "history" => {
-                    let hist: Vec<String> = history.get_untracked().into();
-                    let hist: Vec<String> = hist
-                        .iter()
-                        .rev()
-                        .enumerate()
-                        .map(|(i, c)| format!("{} {}", i + 1, c))
-                        .collect();
-                    set_out(hist.join("\n"));
-                }
-                "theme" | "t" | "wal" => {
-                    next();
-                    let new_theme = state.get_untracked();
-                    set_out(format!(
-                        r#"Theme changed to: <b class="grn">{new_theme}</b>"#
-                    ));
-                }
-                _ => set_out(termfolio::Command::process(val.0, val.1).await),
-            }
-
-            updater.update(|hist| {
-                if !value.is_empty() && hist.front() != Some(&value) {
-                    hist.push_front(value);
-                    if hist.len() > 20 {
-                        hist.pop_back();
-                    }
-                }
-            });
-
-            submitter.update(|prompts| {
-                if *prompts < u8::MAX {
-                    *prompts += 1;
-                }
-            });
+            general_commands(value, state, next, set_out, submitter, updater, history).await
         });
 
         form_element().unwrap().set_inert(true);
         input_element().unwrap().set_inert(true);
     };
 
-    // Focus on the new prompt on mount
-    create_effect(move |_| {
-        if let Some(ref_input) = input_element.get() {
-            let _ = ref_input.on_mount(|input| {
-                let _ = input.focus();
-            });
-        }
-    });
-
     // Event listener for Up and Down arrow keys, Tab and Ctrl/Command + L
-    let _ = use_event_listener(input_element, keydown, move |ev: KeyboardEvent| {
-        let index = history_index.get_untracked();
-        let hist = history.get_untracked();
-        let inp = input_element.get_untracked().unwrap();
-
-        match &ev.key()[..] {
-            //Previous command in history
-            "ArrowUp" => {
-                ev.prevent_default();
-                if index < hist.len() {
-                    inp.set_value(&hist[index]);
-                    set_history_index.update(|history_index| *history_index += 1);
-                }
-            }
-            //Next command in history
-            "ArrowDown" => {
-                if index > 1 {
-                    inp.set_value(&hist[index - 2]);
-                    set_history_index.update(|history_index| *history_index -= 1);
-                } else if index != 0 {
-                    inp.set_value("");
-                    set_history_index.update(|history_index| *history_index -= 1);
-                }
-            }
-            //Autocomplete
-            "Tab" => {
-                ev.prevent_default();
-                inp.set_value(termfolio::autocomplete(&inp.value()));
-            }
-            _ => {}
-        }
-
-        //Clear
-        if (ev.ctrl_key() || ev.meta_key()) && (ev.key() == "l" || ev.key() == "L") {
-            ev.prevent_default();
-            submitter.update(|prompts| {
-                *prompts = 0;
-            });
-            submitter.update(|prompts| {
-                *prompts += 1;
-            });
-        }
-    });
+    keyboard_commands(
+        input_element,
+        history,
+        history_index,
+        set_history_index,
+        submitter,
+    );
 
     view! {
         <form
