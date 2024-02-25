@@ -78,7 +78,7 @@ pub fn Prompt(
             <p class="inline">"user@termfolio:~$ "</p>
             <input
                 id="prompt-form" autocomplete="off"
-                class="inp" type="text" maxlength=42 spellcheck="false"
+                class="inp" type="text" maxlength=38 spellcheck="false"
                 value=out node_ref=input_element/>
         </form>
         <pre>

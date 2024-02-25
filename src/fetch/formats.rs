@@ -169,7 +169,7 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
             format!(
                 r#"<div class="row">
 <div class="rcols">{}</div>
-<div class="rcols" style="max-width: 50%;">{}</div>
+<div class="rcols" style="width: 45%;">{}</div>
 </div>"#,
                 lang_icon(&repo.language.name),
                 text
@@ -187,7 +187,7 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
     let all = format!(
         r#"<div class="row">
 <div class="rcols">{}</div>
-<div class="rcols" style="max-width: 50%;">{}</div>
+<div class="rcols" style="width: 45%;">{}</div>
 </div>"#,
         PLACEHOLDER, all_link
     );

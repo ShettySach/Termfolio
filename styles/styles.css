@@ -13,9 +13,11 @@
 
 * {
   font-family: "IBM Plex Mono";
-  font-size: 20px;
+  font-size: 19px;
   background: var(--black);
   color: var(--white);
+  text-underline-offset: 8px;
+  text-decoration-thickness: 2px;
   /* text-shadow: 0px 5px 10px currentColor; */
 }
 
@@ -114,9 +116,3 @@ form {
   font-size: 35px;
 }
 
-/* Links */
-
-a {
-  text-decoration-thickness: 2px;
-  text-underline-offset: 8px;
-}

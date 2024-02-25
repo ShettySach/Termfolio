@@ -4,7 +4,6 @@ pub const HELP: &str = r#"<span class="grn semibold">  ________________  __  ___
  / / / /___/ _, _/ /  / / __/ / /_/ / /____/ // /_/ / 
 /_/ /_____/_/ |_/_/  /_/_/    \____/_____/___/\____/  
 </span>
-
 Hello, welcome to <u class="blu semibold">Termfolio</u>. Type one of these commands -
 
   <span class="rd semibold">about</span> - View about me
@@ -22,7 +21,8 @@ pub const CREDITS: &str = r#"<span class="grn"> _____ ______________  _________ 
   | | | |___| |\ \| |  | || |   \ \_/ / |_____| |_\ \_/ /
   \_/ \____/\_| \_\_|  |_/\_|    \___/\_____/\___/ \___/ 
 </span>
-Terminal style portfolio website, made in Leptos, Rust.
+Terminal style portfolio website, 
+made using <span class="grn">Leptos - Rust and WASM (WebAssembly)</span>.
 Made by <span class="rd semibold">Sachith C Shetty</span> 
   
   <a href="https://github.com/shettysach" target="_blank" class="blu semibold">Github</a>: github.com/shettysach
@@ -44,7 +44,9 @@ Made by <span class="rd semibold">Sachith C Shetty</span>
 * <a 
     href="https://github.com/idealclover/GitHub-Star-Counter"
     target="_blank"
-    class="blu semibold">Total stars and forks</a> - idealclover/GitHub-Star-Counter"#;
+    class="blu semibold">Total stars and forks</a> - idealclover/GitHub-Star-Counter
+
+"#;
 
 pub const READ_JSON_ERROR: &str = r#"<span class="rd semibold">Error reading config.json</span>"#;
 pub const FETCH_GITHUB_ERROR: &str =

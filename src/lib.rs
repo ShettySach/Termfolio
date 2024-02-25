@@ -103,7 +103,8 @@ pub fn autocomplete(inp: &str) -> &str {
     let inp = inp.trim();
 
     let comms = [
-        "help", "history", "about", "github", "repos", "links", "theme", "credits", "neofetch",
+        "help", "history", "about", "github", "repos", "links", "theme", "wal", "credits",
+        "neofetch",
     ];
 
     if !inp.is_empty() {
@@ -115,4 +116,8 @@ pub fn autocomplete(inp: &str) -> &str {
     }
 
     inp
+}
+
+pub fn banner() -> String {
+    String::from(texts::HELP)
 }

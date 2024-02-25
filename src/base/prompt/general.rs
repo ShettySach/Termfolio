@@ -51,9 +51,14 @@ pub async fn general_commands<F>(
         }
     });
 
+    // Clears if max limit is reached
     submitter.update(|prompts| {
-        if *prompts < u8::MAX {
-            *prompts += 1;
+        if *prompts == u8::MAX {
+            *prompts = 0;
         }
+    });
+
+    submitter.update(|prompts| {
+        *prompts += 1;
     });
 }
