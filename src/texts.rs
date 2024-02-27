@@ -21,9 +21,11 @@ pub const CREDITS: &str = r#"<span class="grn"> _____ ______________  _________ 
   | | | |___| |\ \| |  | || |   \ \_/ / |_____| |_\ \_/ /
   \_/ \____/\_| \_\_|  |_/\_|    \___/\_____/\___/ \___/ 
 </span>
-Terminal style portfolio website, 
-made using <span class="grn">Leptos - Rust and WASM (WebAssembly)</span>.
-Made by <span class="rd semibold">Sachith C Shetty</span> 
+Terminal style portfolio website. 
+
+Made using <span class="rd semibold">Leptos - Rust and WASM (WebAssembly)</span>.
+
+Made by <span class="rd semibold">Sachith C Shetty</span>. 
   
   <a href="https://github.com/shettysach" target="_blank" class="blu semibold">Github</a>: github.com/shettysach
 
