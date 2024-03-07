@@ -1,3 +1,4 @@
+use crate::commands::autocomplete;
 use leptos::ev::{keydown, KeyboardEvent};
 use leptos::html::Input;
 use leptos::{NodeRef, ReadSignal, SignalGetUntracked, SignalUpdate, WriteSignal};
@@ -38,7 +39,7 @@ pub fn keyboard_commands(
             //Autocomplete
             "Tab" => {
                 ev.prevent_default();
-                inp.set_value(termfolio::autocomplete(&inp.value()));
+                inp.set_value(autocomplete(&inp.value()));
             }
             _ => {}
         }

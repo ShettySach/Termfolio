@@ -1,3 +1,4 @@
+use crate::commands::Command;
 use leptos::{ReadSignal, Signal, SignalGetUntracked, SignalUpdate, WriteSignal};
 use leptos_use::ColorMode;
 use std::collections::VecDeque;
@@ -39,7 +40,7 @@ pub async fn general_commands<F>(
                 r#"Theme changed to: <b class="grn">{new_theme}</b>"#
             ));
         }
-        _ => set_out(termfolio::Command::process(val.0, val.1).await),
+        _ => set_out(Command::process(val.0, val.1).await),
     }
 
     updater.update(|hist| {

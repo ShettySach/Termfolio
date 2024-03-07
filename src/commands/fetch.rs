@@ -4,7 +4,7 @@ use tokio::try_join;
 
 // Formnatting functions and error messages
 mod formats;
-use crate::texts::{FETCH_GITHUB_ERROR, READ_JSON_ERROR};
+use crate::commands::texts::{FETCH_GITHUB_ERROR, READ_JSON_ERROR};
 use formats::*;
 
 // Structs for JSON Parsing
@@ -12,7 +12,7 @@ mod structs;
 use structs::*;
 
 // Config JSON
-const JSON: &str = include_str!("../configs/config.json");
+const JSON: &str = include_str!("../../configs/config.json");
 
 // Once statics
 

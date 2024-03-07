@@ -1,8 +1,9 @@
+use crate::commands::banner;
 use leptos::{component, view, IntoView};
 
 #[component]
 pub fn Banner() -> impl IntoView {
-    let banner = termfolio::banner();
+    let banner = banner();
 
     view! {
         <p class="inline">"user@termfolio:~$ "</p>

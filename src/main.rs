@@ -1,6 +1,7 @@
 use leptos::view;
 
 mod base;
+mod commands;
 use base::Base;
 
 fn main() {

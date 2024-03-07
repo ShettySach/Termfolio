@@ -1,14 +1,14 @@
-use crate::fetch::{About, Links, Repository, UserInfo, UserStats};
+use crate::commands::fetch::{About, Links, Repository, UserInfo, UserStats};
 use std::collections::HashMap;
 
 // Ascii art used for Github
-const NEOFETCH: &str = include_str!("../../configs/neofetch.txt");
+const NEOFETCH: &str = include_str!("../../../configs/neofetch.txt");
 
 // Language icons for repos
-const RUST: &str = include_str!("../../configs/lang_icons/ferris.txt");
-const PYTHON: &str = include_str!("../../configs/lang_icons/pythons.txt");
-const JAVASCRIPT: &str = include_str!("../../configs/lang_icons/javascript.txt");
-const PLACEHOLDER: &str = include_str!("../../configs/lang_icons/octocat.txt");
+const RUST: &str = include_str!("../../../configs/lang_icons/ferris.txt");
+const PYTHON: &str = include_str!("../../../configs/lang_icons/pythons.txt");
+const JAVASCRIPT: &str = include_str!("../../../configs/lang_icons/javascript.txt");
+const PLACEHOLDER: &str = include_str!("../../../configs/lang_icons/octocat.txt");
 
 pub fn format_about(about: About) -> String {
     let exp_string: String = about
