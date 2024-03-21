@@ -34,7 +34,7 @@ fn read_config() -> Option<Config> {
 
 pub fn get_about() -> String {
     match read_config() {
-        Some(config) => format_about(config.about),
+        Some(config) => config.about.formatter(),
         _ => String::from(READ_JSON_ERROR),
     }
 }
@@ -59,7 +59,7 @@ pub async fn get_repos() -> String {
 
 pub fn get_contacts() -> &'static String {
     CONTACTS.get_or_init(|| match read_config() {
-        Some(config) => format_contacts(&config.links),
+        Some(config) => config.links.formatter(),
         _ => String::from(READ_JSON_ERROR),
     })
 }
@@ -80,10 +80,14 @@ async fn fetch_github() -> String {
             }) {
                 Ok((info_response, stats_response)) => {
                     if info_response.status().is_success() && stats_response.status().is_success() {
-                        let user_info: UserInfo = info_response.json().await.unwrap();
-                        let user_stats: UserStats = stats_response.json().await.unwrap();
+                        let account = Account {
+                            username: config.github,
+                            langs: config.about.langs,
+                            info: info_response.json().await.unwrap(),
+                            stats: stats_response.json().await.unwrap(),
+                        };
 
-                        format_github(config.github, config.about.langs, user_info, user_stats)
+                        account.formatter()
                     } else {
                         String::from(FETCH_GITHUB_ERROR)
                     }
@@ -105,8 +109,12 @@ async fn fetch_repos() -> String {
 
             match reqwest::get(&repos_url).await {
                 Ok(response) => {
-                    let repos: ApiResponse = response.json().await.unwrap();
-                    format_repos(config.github, repos.response)
+                    let api_response: ApiResponse = response.json().await.unwrap();
+                    let repos = Repos {
+                        username: config.github,
+                        repos: api_response.response,
+                    };
+                    repos.formatter()
                 }
                 Err(_) => String::from(FETCH_GITHUB_ERROR),
             }

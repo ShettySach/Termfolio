@@ -5,7 +5,7 @@
     "name": "Sachith C Shetty",
     "intro": "Hello, I'm Sachith. I'm a CSE student, currently exploring AI/ML and memory safe languages like Rust. I am passionate about creating projects and learning how to code well.",
 
-    "interests": ["Artificial Intelligence", "Machine Learning", "LLMs", "Linux", "Embedded Systems", "Wasm (Web Assembly)", "APIs", "CLIs / TUIs"],
+    "interests": ["Artificial Intelligence", "Machine Learning", "LLMs", "GNU-Linux", "CLIs / TUIs", "Embedded Systems", "WASM"],
 
     "langs": ["Rust", "Python", "C++", "Bash", "Dart"],
 

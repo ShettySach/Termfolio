@@ -1,4 +1,4 @@
-use crate::commands::fetch::{About, Links, Repository, UserInfo, UserStats};
+use super::{About, Account, Links, Repos};
 use std::collections::HashMap;
 
 // Ascii art used for Github
@@ -10,43 +10,48 @@ const PYTHON: &str = include_str!("../../../configs/lang_icons/pythons.txt");
 const JAVASCRIPT: &str = include_str!("../../../configs/lang_icons/javascript.txt");
 const PLACEHOLDER: &str = include_str!("../../../configs/lang_icons/octocat.txt");
 
-pub fn format_about(about: About) -> String {
-    let exp_string: String = about
-        .experience
-        .iter()
-        .map(|exp| {
-            format!(
-                r#"<span class="blu semibold">Title:</span> {}
+pub trait Formatter {
+    fn formatter(self) -> String;
+}
+
+impl Formatter for About {
+    fn formatter(self) -> String {
+        let exp_string: String = self
+            .experience
+            .iter()
+            .map(|exp| {
+                format!(
+                    r#"<span class="blu semibold">Title:</span> {}
 <span class="blu semibold">Description:</span> 
 {}"#,
-                exp.title,
-                exp.description
-                    .iter()
-                    .map(|s| format!(r#"<span class="blu semibold">*</span> {}"#, s))
-                    .collect::<Vec<_>>()
-                    .join("\n"),
-            )
-        })
-        .collect::<Vec<String>>()
-        .join("\n");
+                    exp.title,
+                    exp.description
+                        .iter()
+                        .map(|s| format!(r#"<span class="blu semibold">*</span> {}"#, s))
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                )
+            })
+            .collect::<Vec<String>>()
+            .join("\n");
 
-    let edu_string: String = about
-        .education
-        .iter()
-        .map(|edu| {
-            format!(
-                r#"<span class="blu semibold">Institute: </span>{}
+        let edu_string: String = self
+            .education
+            .iter()
+            .map(|edu| {
+                format!(
+                    r#"<span class="blu semibold">Institute: </span>{}
 <span class="blu semibold">Course:</span> {}
 <span class="blu semibold">Duration:</span> {}
 "#,
-                edu.institute, edu.course, edu.duration
-            )
-        })
-        .collect::<Vec<String>>()
-        .join("\n");
+                    edu.institute, edu.course, edu.duration
+                )
+            })
+            .collect::<Vec<String>>()
+            .join("\n");
 
-    let text = format!(
-        r#"<center class="grn semibold">{}</center>
+        let text = format!(
+            r#"<center class="grn semibold">{}</center>
 {}
 
 <u class="rd semibold">Interests</u>
@@ -65,50 +70,46 @@ pub fn format_about(about: About) -> String {
 
 {}
 "#,
-        about.name.to_uppercase(),
-        about.intro,
-        about
-            .interests
-            .iter()
-            .map(|s| format!(r#"<span class="rd semibold">*</span> {}"#, s))
-            .collect::<Vec<_>>()
-            .join("\n"),
-        format_langs(about.langs),
-        exp_string,
-        edu_string
-    );
+            self.name.to_uppercase(),
+            self.intro,
+            self.interests
+                .iter()
+                .map(|s| format!(r#"<span class="rd semibold">*</span> {}"#, s))
+                .collect::<Vec<_>>()
+                .join("\n"),
+            format_langs(self.langs),
+            exp_string,
+            edu_string
+        );
 
-    format!(
-        r#"
+        format!(
+            r#"
 
 
 <div class="row" style="display: flex; flex-direction: row; align-items: center; justify-content: center;"> 
 <div class="acols">{}</div>
 </div>
 "#,
-        text
-    )
+            text
+        )
+    }
 }
 
-pub fn format_github(
-    username: String,
-    langs: Vec<String>,
-    info: UserInfo,
-    stats: UserStats,
-) -> String {
-    let name = info.name.unwrap_or(String::from("-"));
-    let bio = info.bio.unwrap_or(String::from("-"));
-    let repos = info.public_repos;
-    let stars = stats.stars;
-    let forks = stats.forks;
-    let company = info.company.unwrap_or(String::from("-"));
-    let location = info.location.unwrap_or(String::from("-"));
-    let followers = info.followers;
-    let following = info.following;
-    let created_on = &info.created_at[..10];
+impl Formatter for Account {
+    fn formatter(self) -> String {
+        let name = self.info.name.unwrap_or(String::from("-"));
+        let bio = self.info.bio.unwrap_or(String::from("-"));
+        let repos = self.info.public_repos;
+        let stars = self.stats.stars;
+        let forks = self.stats.forks;
+        let company = self.info.company.unwrap_or(String::from("-"));
+        let location = self.info.location.unwrap_or(String::from("-"));
+        let followers = self.info.followers;
+        let following = self.info.following;
+        let created_on = &self.info.created_at[..10];
 
-    let text = format!(
-        r#"<a href="https://www.github.com/{}" style="text-decoration:none" target="_blank"><span class="grn semibold">{}</span>@<span class="grn semibold">github</span></a>
+        let text = format!(
+            r#"<a href="https://www.github.com/{}" style="text-decoration:none" target="_blank"><span class="grn semibold">{}</span>@<span class="grn semibold">github</span></a>
 ----------------------
 <span class="grn semibold">Name:</span> {}
 <span class="grn semibold">Bio:</span> {}
@@ -123,36 +124,39 @@ pub fn format_github(
 <span class="grn semibold">Created on:</span> {}
 
 {BLOCKS}"#,
-        username,
-        username,
-        name,
-        bio,
-        repos,
-        format_langs(langs),
-        stars,
-        forks,
-        company,
-        location,
-        followers,
-        following,
-        created_on
-    );
+            self.username,
+            self.username,
+            name,
+            bio,
+            repos,
+            format_langs(self.langs),
+            stars,
+            forks,
+            company,
+            location,
+            followers,
+            following,
+            created_on
+        );
 
-    format!(
-        r#"<div class="row">
+        format!(
+            r#"<div class="row">
 <div class="gcols">{}</div>
 <div class="gcols">{}</div>
 </div>"#,
-        NEOFETCH, text
-    )
+            NEOFETCH, text
+        )
+    }
 }
 
-pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
-    let res: Vec<String> = repos
-        .iter()
-        .map(|repo| {
-            let text = format!(
-                r#"<a href="{}" target="_blank" class="blu semibold">{}</a>
+impl Formatter for Repos {
+    fn formatter(self) -> String {
+        let res: Vec<String> = self
+            .repos
+            .iter()
+            .map(|repo| {
+                let text = format!(
+                    r#"<a href="{}" target="_blank" class="blu semibold">{}</a>
 
 <span class="rd semibold">Description:</span> {}
 <span class="rd semibold">Language:</span> <span style="color:{}">{}</span>
@@ -160,81 +164,84 @@ pub fn format_repos(username: String, repos: Vec<Repository>) -> String {
 <span class="rd semibold">Forks:</span> <span class="ylw">{}</span>
 
         "#,
-                repo.repo,
-                repo.name,
-                repo.description,
-                repo.language.color,
-                repo.language.name,
-                repo.stars,
-                repo.forks
-            );
+                    repo.repo,
+                    repo.name,
+                    repo.description,
+                    repo.language.color,
+                    repo.language.name,
+                    repo.stars,
+                    repo.forks
+                );
 
-            format!(
-                r#"<div class="row">
+                format!(
+                    r#"<div class="row">
 <div class="rcols">{}</div>
 <div class="rcols" style="width: 45%;">{}</div>
 </div>"#,
-                lang_icon(&repo.language.name),
-                text
-            )
-        })
-        .collect();
+                    lang_icon(&repo.language.name),
+                    text
+                )
+            })
+            .collect();
 
-    let all_link = format!(
-        r#"<a href="https://www.github.com/{}?tab=repositories" target="_blank" class="blu semibold">All repos</a>
+        let all_link = format!(
+            r#"<a href="https://www.github.com/{}?tab=repositories" target="_blank" class="blu semibold">All repos</a>
 
 <span class="rd semibold">Description:</span> All my Github repositories."#,
-        username
-    );
+            self.username
+        );
 
-    let all = format!(
-        r#"<div class="row">
+        let all = format!(
+            r#"<div class="row">
 <div class="rcols">{}</div>
 <div class="rcols" style="width: 45%;">{}</div>
 </div>"#,
-        PLACEHOLDER, all_link
-    );
+            PLACEHOLDER, all_link
+        );
 
-    format!("{}\n{}", res.join("\n"), all)
+        format!("{}\n{}", res.join("\n"), all)
+    }
 }
 
-pub fn format_contacts(links: &Links) -> String {
-    let mut result = String::new();
+impl Formatter for Links {
+    fn formatter(self) -> String {
+        let mut result = String::new();
 
-    result += &format!(
-        r#"  <a href="https://github.com/{}" target="_blank" class="semibold"  style="color:var(--purple);">Github</a>: github.com/{}
-"#,
-        links.github, links.github
-    );
-
-    if let Some(email) = &links.email {
         result += &format!(
-            r#"
+            r#"  <a href="https://github.com/{}" target="_blank" class="semibold"  style="color:var(--purple);">Github</a>: github.com/{}
+"#,
+            self.github, self.github
+        );
+
+        if let Some(email) = &self.email {
+            result += &format!(
+                r#"
   <a href="mailto:{}" target="_blank" class="semibold" style="color:var(--orange);">Email</a>: {}
   "#,
-            email, email
-        );
-    }
+                email, email
+            );
+        }
 
-    if let Some(linkedin) = &links.linkedin {
-        result += &format!(
-            r#"
+        if let Some(linkedin) = &self.linkedin {
+            result += &format!(
+                r#"
   <a href="https://www.linkedin.com/{}" target="_blank" class="semibold" style="color:var(--dblue);">LinkedIn</a>: linkedin.com/{}
   "#,
-            linkedin, linkedin
-        );
-    }
+                linkedin, linkedin
+            );
+        }
 
-    if let Some(twitter) = &links.twitter {
-        result += &format!(
-            r#"
+        if let Some(twitter) = &self.twitter {
+            result += &format!(
+                r#"
   <a href="https://www.twitter.com/{}" target="_blank" class="blu semibold">Twitter/X</a>: @{}
   "#,
-            twitter, twitter
-        );
-    }
+                twitter, twitter
+            );
+        }
 
-    result
+        result
+    }
 }
 
 pub fn format_langs(langs: Vec<String>) -> String {

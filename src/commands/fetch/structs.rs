@@ -39,6 +39,14 @@ pub struct Links {
 }
 
 #[derive(Deserialize, Serialize, Clone)]
+pub struct Account {
+    pub username: String,
+    pub langs: Vec<String>,
+    pub info: UserInfo,
+    pub stats: UserStats,
+}
+
+#[derive(Deserialize, Serialize, Clone)]
 pub struct UserInfo {
     pub name: Option<String>,
     pub bio: Option<String>,
@@ -59,6 +67,12 @@ pub struct UserStats {
 #[derive(Deserialize, Serialize)]
 pub struct ApiResponse {
     pub response: Vec<Repository>,
+}
+
+#[derive(Deserialize, Serialize)]
+pub struct Repos {
+    pub username: String,
+    pub repos: Vec<Repository>,
 }
 
 #[derive(Deserialize, Serialize, Clone)]
