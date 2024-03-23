@@ -4,6 +4,7 @@ use leptos_use::{
     UseColorModeReturn, UseCycleListOptions, UseCycleListReturn,
 };
 
+// Last theme will be default
 static THEMES: [&str; 4] = ["catppuccin", "nord", "classic", "tokyo-night"];
 
 pub fn theme_changer() -> (Signal<ColorMode>, impl Fn() + Clone) {

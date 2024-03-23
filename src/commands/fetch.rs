@@ -4,7 +4,7 @@ use tokio::try_join;
 
 // Formnatting functions and error messages
 mod formats;
-use crate::commands::texts::{FETCH_GITHUB_ERROR, READ_JSON_ERROR};
+use super::texts::{FETCH_GITHUB_ERROR, READ_JSON_ERROR};
 use formats::*;
 
 // Structs for JSON Parsing

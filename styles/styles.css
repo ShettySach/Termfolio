@@ -13,7 +13,7 @@
 
 * {
   font-family: "IBM Plex Mono";
-  font-size: 19px;
+  font-size: 18px;
   background: var(--black);
   color: var(--white);
   text-underline-offset: 8px;
@@ -96,7 +96,7 @@ form {
 
 .rcols {
   flex: 0 0 calc(50% - 35px);
-  margin: 50px;
+  margin: 30px;
 }
 
 .row {
